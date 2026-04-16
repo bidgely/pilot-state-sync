@@ -92,6 +92,9 @@ async function main() {
 
     if (screenHits.length > 0) {
       console.warn(`[sync] Pilot ${pilotId}: ${screenHits.length} sensitive-pattern hits`);
+      for (const hit of screenHits) {
+        console.warn(`[sync]   ${hit.fieldName} → ${hit.patternName}`);
+      }
       hasScreenHits = true;
 
       // Write field names only, never values

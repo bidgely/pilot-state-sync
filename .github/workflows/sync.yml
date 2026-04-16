@@ -32,6 +32,14 @@ jobs:
           REPO_ROOT: ${{ github.workspace }}
         run: node scripts/sync.js
 
+      - name: Upload _meta as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sync-meta
+          path: _meta/
+          if-no-files-found: ignore
+
       - name: Push changes
         run: |
           git config user.name "pilot-state-sync[bot]"
