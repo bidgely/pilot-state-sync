@@ -26,9 +26,8 @@ jobs:
 
       - name: Run sync
         env:
-          BIDGELY_API_BASE_URL: ${{ secrets.BIDGELY_API_BASE_URL }}
           BIDGELY_API_TOKEN: ${{ secrets.BIDGELY_API_TOKEN }}
-          PILOT_IDS: ${{ vars.PILOT_IDS }}
+          PILOT_CONFIG: ${{ vars.PILOT_CONFIG }}
           BIDGELY_ENV: ${{ vars.BIDGELY_ENV }}
           REPO_ROOT: ${{ github.workspace }}
         run: node scripts/sync.js

@@ -12,15 +12,24 @@ import { renderPilot } from './renderer.js';
 
 // ── Config from environment ──────────────────────────────────────────
 
-const BASE_URL = process.env.BIDGELY_API_BASE_URL;
 const TOKEN = process.env.BIDGELY_API_TOKEN;
-const PILOT_IDS = (process.env.PILOT_IDS || '').split(',').map(s => s.trim()).filter(Boolean);
 const ENV_NAME = process.env.BIDGELY_ENV || 'unknown';
 const REPO_ROOT = process.env.REPO_ROOT || process.cwd();
 
-if (!BASE_URL) { console.error('Missing BIDGELY_API_BASE_URL'); process.exit(1); }
+// PILOT_CONFIG is a JSON object mapping pilot ID → API base URL.
+// e.g. {"20018":"https://api-server-nashville-uat.bidgely.com","20019":"https://api-server-other.bidgely.com"}
+let PILOT_CONFIG;
+try {
+  PILOT_CONFIG = JSON.parse(process.env.PILOT_CONFIG || '');
+} catch {
+  console.error('Missing or invalid PILOT_CONFIG. Expected JSON object: {"pilotId":"baseUrl",...}');
+  process.exit(1);
+}
+
+const PILOT_IDS = Object.keys(PILOT_CONFIG);
+
 if (!TOKEN) { console.error('Missing BIDGELY_API_TOKEN'); process.exit(1); }
-if (PILOT_IDS.length === 0) { console.error('Missing PILOT_IDS'); process.exit(1); }
+if (PILOT_IDS.length === 0) { console.error('PILOT_CONFIG has no entries'); process.exit(1); }
 
 // ── Paths ────────────────────────────────────────────────────────────
 
@@ -44,7 +53,8 @@ async function main() {
   for (const pilotId of PILOT_IDS) {
     console.log(`[sync] Fetching pilot ${pilotId}...`);
 
-    const fetchResult = await fetchPilot(pilotId, { baseUrl: BASE_URL, token: TOKEN });
+    const baseUrl = PILOT_CONFIG[pilotId];
+    const fetchResult = await fetchPilot(pilotId, { baseUrl, token: TOKEN });
 
     if (!fetchResult.ok) {
       const { kind, message } = fetchResult.error;

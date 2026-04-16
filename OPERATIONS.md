@@ -13,7 +13,8 @@ and the message "ALL pilots failed with auth errors." Fix the secret and re-run.
 ## Add a new pilot
 
 1. Go to repo Settings > Secrets and variables > Actions > Variables.
-2. Edit `PILOT_IDS` to add the new pilot ID (comma-separated).
+2. Edit `PILOT_CONFIG` to add the new pilot ID and its API base URL.
+   e.g. add `"20020":"https://api-server-foo.bidgely.com"` to the JSON object.
 3. Run the workflow manually to verify.
 
 ## Add a new allowed field
@@ -58,7 +59,6 @@ If a bad commit was pushed (e.g., sensitive data slipped through):
 
 | Variable | Type | Description |
 |----------|------|-------------|
-| `BIDGELY_API_BASE_URL` | Secret | e.g. `https://api-server-nashville-uat.bidgely.com` |
 | `BIDGELY_API_TOKEN` | Secret | Bearer token for the API |
-| `PILOT_IDS` | Variable | Comma-separated pilot IDs, e.g. `20018,20019,20020` |
+| `PILOT_CONFIG` | Variable | JSON mapping of pilot ID → API base URL, e.g. `{"20018":"https://..."}` |
 | `BIDGELY_ENV` | Variable | Environment name shown in markdown, e.g. `uat` |
