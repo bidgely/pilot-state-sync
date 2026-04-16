@@ -1,10 +1,9 @@
 name: Pilot Config Sync
 
 on:
-  # Hourly cron — disabled by default until Gate 3 (manual dry run) passes.
-  # Uncomment the schedule line below after a clean workflow_dispatch run.
-  # schedule:
-  #   - cron: '0 * * * *'
+  schedule:
+    # Hourly from 8:00 AM to 11:30 PM IST (2:30–17:30 UTC).
+    - cron: '30 2-17 * * *'
   workflow_dispatch: {}
 
 concurrency:
