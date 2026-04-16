@@ -16,20 +16,20 @@ const TOKEN = process.env.BIDGELY_API_TOKEN;
 const ENV_NAME = process.env.BIDGELY_ENV || 'unknown';
 const REPO_ROOT = process.env.REPO_ROOT || process.cwd();
 
-// PILOT_CONFIG is a JSON object mapping pilot ID → API base URL.
+// PILOT_CONFIGS is a JSON object mapping pilot ID → API base URL.
 // e.g. {"20018":"https://api-server-nashville-uat.bidgely.com","20019":"https://api-server-other.bidgely.com"}
-let PILOT_CONFIG;
+let PILOT_CONFIGS;
 try {
-  PILOT_CONFIG = JSON.parse(process.env.PILOT_CONFIG || '');
+  PILOT_CONFIGS = JSON.parse(process.env.PILOT_CONFIGS || '');
 } catch {
-  console.error('Missing or invalid PILOT_CONFIG. Expected JSON object: {"pilotId":"baseUrl",...}');
+  console.error('Missing or invalid PILOT_CONFIGS. Expected JSON object: {"pilotId":"baseUrl",...}');
   process.exit(1);
 }
 
-const PILOT_IDS = Object.keys(PILOT_CONFIG);
+const PILOT_IDS = Object.keys(PILOT_CONFIGS);
 
 if (!TOKEN) { console.error('Missing BIDGELY_API_TOKEN'); process.exit(1); }
-if (PILOT_IDS.length === 0) { console.error('PILOT_CONFIG has no entries'); process.exit(1); }
+if (PILOT_IDS.length === 0) { console.error('PILOT_CONFIGS has no entries'); process.exit(1); }
 
 // ── Paths ────────────────────────────────────────────────────────────
 
@@ -53,7 +53,7 @@ async function main() {
   for (const pilotId of PILOT_IDS) {
     console.log(`[sync] Fetching pilot ${pilotId}...`);
 
-    const baseUrl = PILOT_CONFIG[pilotId];
+    const baseUrl = PILOT_CONFIGS[pilotId];
     const fetchResult = await fetchPilot(pilotId, { baseUrl, token: TOKEN });
 
     if (!fetchResult.ok) {

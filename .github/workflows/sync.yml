@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   sync:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64]
     steps:
       - uses: actions/checkout@v4
 
@@ -27,7 +27,7 @@ jobs:
       - name: Run sync
         env:
           BIDGELY_API_TOKEN: ${{ secrets.BIDGELY_API_TOKEN }}
-          PILOT_CONFIG: ${{ vars.PILOT_CONFIG }}
+          PILOT_CONFIGS: ${{ vars.PILOT_CONFIGS }}
           BIDGELY_ENV: ${{ vars.BIDGELY_ENV }}
           REPO_ROOT: ${{ github.workspace }}
         run: node scripts/sync.js

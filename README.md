@@ -30,7 +30,7 @@ dependencies without explicit team review.
 1. Create GitHub Actions secrets:
    - `BIDGELY_API_TOKEN` — bearer token for the API
 2. Create GitHub Actions variables:
-   - `PILOT_CONFIG` — JSON mapping of pilot ID to API base URL, e.g.
+   - `PILOT_CONFIGS` — JSON mapping of pilot ID to API base URL, e.g.
      `{"20018":"https://api-server-nashville-uat.bidgely.com","20019":"https://api-server-other.bidgely.com"}`
    - `BIDGELY_ENV` — environment name, e.g. `uat`
 3. Run the workflow manually first (Actions > Pilot Config Sync > Run workflow).
