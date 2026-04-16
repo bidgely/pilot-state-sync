@@ -1,0 +1,40 @@
+name: Pilot Config Sync
+
+on:
+  # Hourly cron — disabled by default until Gate 3 (manual dry run) passes.
+  # Uncomment the schedule line below after a clean workflow_dispatch run.
+  # schedule:
+  #   - cron: '0 * * * *'
+  workflow_dispatch: {}
+
+concurrency:
+  group: pilot-state-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run sync
+        env:
+          BIDGELY_API_BASE_URL: ${{ secrets.BIDGELY_API_BASE_URL }}
+          BIDGELY_API_TOKEN: ${{ secrets.BIDGELY_API_TOKEN }}
+          PILOT_IDS: ${{ vars.PILOT_IDS }}
+          BIDGELY_ENV: ${{ vars.BIDGELY_ENV }}
+          REPO_ROOT: ${{ github.workspace }}
+        run: node scripts/sync.js
+
+      - name: Push changes
+        run: |
+          git config user.name "pilot-state-sync[bot]"
+          git config user.email "pilot-state-sync[bot]@users.noreply.github.com"
+          git push
