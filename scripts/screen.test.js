@@ -33,12 +33,6 @@ describe('screenValue', () => {
     assert.strictEqual(screenValue('threshold', '300'), null);
   });
 
-  it('catches email addresses', () => {
-    const hit = screenValue('contact', 'admin@bidgely.com');
-    assert.ok(hit);
-    assert.strictEqual(hit.patternName, 'email');
-  });
-
   it('catches bearer prefix', () => {
     const hit = screenValue('auth', 'Bearer abc123xyz');
     assert.ok(hit);
@@ -75,16 +69,14 @@ describe('screenConfig', () => {
       bill_projection: JSON.stringify({
         kvs: [
           { key: 'model', val: 'FIFTEEN_SEVEN_MODEL' },
-          { key: 'contact_email', val: 'admin@example.com' },
+          { key: 'auth_header', val: 'Bearer abc123xyz' },
         ]
       })
     };
     const hits = screenConfig(config);
-    // Hits both the raw JSON string (top-level) and the parsed kvs value
-    assert.ok(hits.length >= 1);
-    const kvsHit = hits.find(h => h.fieldName === 'bill_projection.contact_email');
+    const kvsHit = hits.find(h => h.fieldName === 'bill_projection.auth_header');
     assert.ok(kvsHit);
-    assert.strictEqual(kvsHit.patternName, 'email');
+    assert.strictEqual(kvsHit.patternName, 'bearer_prefix');
   });
 
   it('returns empty array for clean config', () => {

@@ -13,7 +13,6 @@ const allowlist = new Set(
 
 // Sensitive-pattern regexes — intentionally dumb, catches the 90% case.
 const SENSITIVE_PATTERNS = [
-  { name: 'email', pattern: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/ },
   { name: 'bearer_prefix', pattern: /^Bearer\s+/i },
   { name: 'base64_long', pattern: /^[A-Za-z0-9+/=]{64,}$/ },
   { name: 'credit_card', pattern: /\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b/ },
