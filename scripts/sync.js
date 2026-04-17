@@ -6,8 +6,8 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { execSync } from 'node:child_process';
-import { fetchPilot, ErrorKind } from './fetcher.js';
-import { filterByAllowlist, screenConfig, scrubBearer } from './screen.js';
+import { fetchPilot, fetchStringResources, ErrorKind } from './fetcher.js';
+import { filterByAllowlist, screenConfig, screenStrings, scrubBearer } from './screen.js';
 import { renderPilot } from './renderer.js';
 
 // ── Config from environment ──────────────────────────────────────────
@@ -118,6 +118,32 @@ async function main() {
     const mdPath = join(pilotsDir, `${pilotId}.md`);
     writeFileSync(mdPath, md + '\n');
 
+    // ── Fetch string resources (pilot-level, default locale) ──
+    const locale = deriveLocale(allowed);
+    const stringsResult = await fetchStringResources(pilotId, { baseUrl, token: TOKEN, locale });
+
+    if (stringsResult.ok) {
+      const stringsHits = screenStrings(stringsResult.data);
+      if (stringsHits.length > 0) {
+        console.warn(`[sync] Pilot ${pilotId} strings (${locale}): ${stringsHits.length} sensitive-pattern hits`);
+        for (const hit of stringsHits) {
+          console.warn(`[sync]   ${hit.fieldName} → ${hit.patternName}`);
+        }
+        hasScreenHits = true;
+        const hitsPath = join(metaDir, 'screen_hits.json');
+        const existing = readJsonSafe(hitsPath, {});
+        existing[`${pilotId}.strings`] = stringsHits.map(h => ({ field: h.fieldName, pattern: h.patternName }));
+        writeFileSync(hitsPath, JSON.stringify(existing, null, 2) + '\n');
+      }
+
+      const stringsPath = join(pilotsDir, `${pilotId}.strings.json`);
+      writeFileSync(stringsPath, JSON.stringify(stringsResult.data, null, 2) + '\n');
+      console.log(`[sync] Pilot ${pilotId} strings OK (${locale}, ${Object.keys(stringsResult.data).length} keys)`);
+    } else {
+      const { kind, message } = stringsResult.error;
+      console.warn(`[sync] Pilot ${pilotId} strings (${locale}) FAILED: ${kind} — ${scrubBearer(message)}`);
+    }
+
     results.ok.push(pilotId);
     console.log(`[sync] Pilot ${pilotId} OK (${Object.keys(allowed).length} fields)`);
   }
@@ -178,6 +204,24 @@ async function main() {
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────
+
+/**
+ * Pull default_locale from frontend_configs.kvs and normalize to en_US form.
+ * Falls back to en_US when missing or unparseable.
+ */
+function deriveLocale(allowed) {
+  const raw = allowed.frontend_configs;
+  if (typeof raw !== 'string') return 'en_US';
+  try {
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.kvs)) return 'en_US';
+    const entry = parsed.kvs.find(kv => kv.key === 'default_locale');
+    if (!entry || typeof entry.val !== 'string') return 'en_US';
+    return entry.val.replace('-', '_');
+  } catch {
+    return 'en_US';
+  }
+}
 
 function readJsonSafe(path, fallback) {
   try {

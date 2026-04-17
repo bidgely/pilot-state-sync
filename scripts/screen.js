@@ -94,6 +94,21 @@ export function screenConfig(configObj) {
 }
 
 /**
+ * Scan a flat string-resources object for sensitive patterns.
+ * StringResources are shaped as { "resource.key": "text value", ... } —
+ * no kvs wrapper, no nested JSON.
+ * Returns array of hits: [{ fieldName, patternName }].
+ */
+export function screenStrings(stringsObj) {
+  const hits = [];
+  for (const [key, value] of Object.entries(stringsObj)) {
+    const hit = screenValue(key, value);
+    if (hit) hits.push(hit);
+  }
+  return hits;
+}
+
+/**
  * Strip bearer tokens from error messages before logging.
  */
 export function scrubBearer(str) {

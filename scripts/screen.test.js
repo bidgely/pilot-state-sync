@@ -1,7 +1,7 @@
 // screen.test.js — tests for allowlist filter + sensitive-pattern screen
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { filterByAllowlist, screenValue, screenConfig, scrubBearer } from './screen.js';
+import { filterByAllowlist, screenValue, screenConfig, screenStrings, scrubBearer } from './screen.js';
 
 describe('filterByAllowlist', () => {
   it('passes through allowlisted keys', () => {
@@ -96,6 +96,28 @@ describe('screenConfig', () => {
     const config = { broken: 'not json at all {{{' };
     const hits = screenConfig(config);
     assert.deepStrictEqual(hits, []);
+  });
+});
+
+describe('screenStrings', () => {
+  it('scans flat string resource objects', () => {
+    const strings = {
+      'com.bidgely.email.welcome': 'Welcome to our service',
+      'com.bidgely.email.auth': 'Bearer abc123xyz',
+    };
+    const hits = screenStrings(strings);
+    assert.strictEqual(hits.length, 1);
+    assert.strictEqual(hits[0].fieldName, 'com.bidgely.email.auth');
+    assert.strictEqual(hits[0].patternName, 'bearer_prefix');
+  });
+
+  it('returns empty array for clean strings', () => {
+    const strings = { 'a': 'hello', 'b': 'world' };
+    assert.deepStrictEqual(screenStrings(strings), []);
+  });
+
+  it('handles empty object', () => {
+    assert.deepStrictEqual(screenStrings({}), []);
   });
 });
 

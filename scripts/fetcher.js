@@ -47,6 +47,23 @@ function isRetryable(kind) {
  */
 export async function fetchPilot(pilotId, { baseUrl, token }) {
   const url = `${baseUrl}/entities/pilot/${pilotId}/configs`;
+  return fetchWithRetry(url, token);
+}
+
+/**
+ * Fetch a pilot's string resources for a given locale.
+ * Same retry/timeout behavior as fetchPilot.
+ *
+ * @param {string|number} pilotId
+ * @param {object} opts — { baseUrl, token, locale }
+ * @returns {Promise<{ ok: boolean, data?: object, error?: { kind: string, message: string } }>}
+ */
+export async function fetchStringResources(pilotId, { baseUrl, token, locale }) {
+  const url = `${baseUrl}/2.1/stringResources/pilot/${pilotId}?locale=${encodeURIComponent(locale)}`;
+  return fetchWithRetry(url, token);
+}
+
+async function fetchWithRetry(url, token) {
   const maxRetries = 2;
   const backoffMs = 2000;
   const timeoutMs = 30000;
@@ -89,7 +106,6 @@ export async function fetchPilot(pilotId, { baseUrl, token }) {
         return { ok: false, error: { kind, message } };
       }
 
-      // Retryable but check if we have retries left
       if (attempt < maxRetries) {
         await sleep(backoffMs * (attempt + 1));
         continue;
