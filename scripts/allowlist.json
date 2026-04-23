@@ -185,6 +185,8 @@
   "event_subscriptions.NEIGHBOURHOOD_COMPARISON.GAS.Email",
   "event_subscriptions.NEIGHBOURHOOD_COMPARISON.GAS.OPT_IN",
   "event_subscriptions.NEIGHBOURHOOD_COMPARISON.GAS.OPT_OUT",
+  "event_subscriptions.NEIGHBOURHOOD_COMPARISON.OPT_IN",
+  "event_subscriptions.NEIGHBOURHOOD_COMPARISON.OPT_OUT",
   "event_subscriptions.PDF",
   "event_subscriptions.PERSONALIZED_SEASONAL_ALERT",
   "event_subscriptions.PERSONALIZED_SEASONAL_ALERT.ELECTRIC",
