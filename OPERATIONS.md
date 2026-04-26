@@ -17,16 +17,14 @@ and the message "ALL pilots failed with auth errors." Fix the secret and re-run.
    e.g. add `"20020":"https://api-server-foo.bidgely.com"` to the JSON object.
 3. Run the workflow manually to verify.
 
-## Add a new allowed field
+## New field types appear
 
-When the API returns a field not on the allowlist, the workflow fails with exit code 3
-and writes `_meta/unknown_fields.json` listing the new fields.
+There is no allowlist. Every field returned by the API is synced. New field types
+are surfaced as GitHub Actions notices on the run page (yellow banner) and logged
+as `::notice::` lines, but they do not fail the build.
 
-1. Pull the latest `_meta/unknown_fields.json`.
-2. For each new field, decide: is this safe to publish company-wide via Glean?
-3. If yes, add the field name to `scripts/allowlist.json` (keep it sorted).
-4. If no, leave it off the allowlist. It will be silently dropped.
-5. Commit, push, re-run the workflow.
+If a new field type warrants attention (e.g., a config you didn't expect), inspect
+the committed JSON in `pilots/{pilotId}.json` directly.
 
 ## Handle a sensitive-pattern hit
 
@@ -35,10 +33,10 @@ exit code 4 and writes `_meta/screen_hits.json` with field names (never values).
 
 1. Pull the latest `_meta/screen_hits.json`.
 2. For each hit, check the actual value in the API response (NOT in the repo).
-3. If it's a false positive (e.g., a URL that looks like base64), no action needed.
-   The field stays on the allowlist and the screen will fire every run.
-   Consider adding the field to an ignore list in `screen.js` if it's noisy.
-4. If it's a real sensitive value, remove the field from `scripts/allowlist.json`.
+3. If it's a false positive (e.g., a URL that looks like base64), update the
+   sensitive-pattern regexes in `scripts/screen.js` to be more specific.
+4. If it's a real sensitive value, the field needs to be redacted at the API source
+   before this sync can be re-enabled.
 
 ## Disable the workflow
 

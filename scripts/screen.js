@@ -1,15 +1,5 @@
-// screen.js — allowlist filter + sensitive-pattern regex screen
+// screen.js — sensitive-pattern regex screen
 // Zero dependencies. Pure functions.
-
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-const allowlist = new Set(
-  JSON.parse(readFileSync(join(__dirname, 'allowlist.json'), 'utf-8'))
-);
 
 // Sensitive-pattern regexes — intentionally dumb, catches the 90% case.
 const SENSITIVE_PATTERNS = [
@@ -22,27 +12,6 @@ const SENSITIVE_PATTERNS = [
   { name: 'aws_key', pattern: /^AKIA[0-9A-Z]{16}$/ },
   { name: 'uuid_user_id', pattern: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i },
 ];
-
-/**
- * Filter config object to only allowlisted keys.
- * Returns { allowed, unknownFields }.
- * allowed = object with only allowlisted keys.
- * unknownFields = array of key names not on the allowlist.
- */
-export function filterByAllowlist(configObj) {
-  const allowed = {};
-  const unknownFields = [];
-
-  for (const key of Object.keys(configObj)) {
-    if (allowlist.has(key)) {
-      allowed[key] = configObj[key];
-    } else {
-      unknownFields.push(key);
-    }
-  }
-
-  return { allowed, unknownFields };
-}
 
 /**
  * Scan a value string for sensitive patterns.

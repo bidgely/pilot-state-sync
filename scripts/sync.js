@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { execSync } from 'node:child_process';
 import { fetchPilot, fetchStringResources, ErrorKind } from './fetcher.js';
-import { filterByAllowlist, screenConfig, screenStrings, scrubBearer } from './screen.js';
+import { screenConfig, screenStrings, scrubBearer } from './screen.js';
 import { renderPilot } from './renderer.js';
 
 // ── Config from environment ──────────────────────────────────────────
@@ -46,7 +46,6 @@ async function main() {
   const results = { ok: [], failures: [] };
   let allAuthFailure = true;
   let hasScreenHits = false;
-  let hasUnknownFields = false;
 
   console.log(`[sync] Starting sync for ${PILOT_IDS.length} pilots in ${ENV_NAME} at ${now}`);
 
@@ -73,22 +72,17 @@ async function main() {
     allAuthFailure = false;
     const config = fetchResult.data;
 
-    // ── Allowlist filter ──
-    const { allowed, unknownFields } = filterByAllowlist(config);
-
-    if (unknownFields.length > 0) {
-      console.warn(`[sync] Pilot ${pilotId}: ${unknownFields.length} unknown fields: ${unknownFields.join(', ')}`);
-      hasUnknownFields = true;
-
-      // Accumulate unknown fields
-      const unknownPath = join(metaDir, 'unknown_fields.json');
-      const existing = readJsonSafe(unknownPath, {});
-      existing[pilotId] = unknownFields;
-      writeFileSync(unknownPath, JSON.stringify(existing, null, 2) + '\n');
+    // ── New-field detection (informational, no fail) ──
+    const jsonPath = join(pilotsDir, `${pilotId}.json`);
+    const prevConfig = readJsonSafe(jsonPath, {});
+    const prevKeys = new Set(Object.keys(prevConfig));
+    const newKeys = Object.keys(config).filter(k => !prevKeys.has(k));
+    if (newKeys.length > 0 && Object.keys(prevConfig).length > 0) {
+      console.log(`::notice::Pilot ${pilotId}: ${newKeys.length} new field(s): ${newKeys.join(', ')}`);
     }
 
     // ── Sensitive-pattern screen ──
-    const screenHits = screenConfig(allowed);
+    const screenHits = screenConfig(config);
 
     if (screenHits.length > 0) {
       console.warn(`[sync] Pilot ${pilotId}: ${screenHits.length} sensitive-pattern hits`);
@@ -105,8 +99,7 @@ async function main() {
     }
 
     // ── Write JSON ──
-    const jsonPath = join(pilotsDir, `${pilotId}.json`);
-    writeFileSync(jsonPath, JSON.stringify(allowed, null, 2) + '\n');
+    writeFileSync(jsonPath, JSON.stringify(config, null, 2) + '\n');
 
     // ── Write Markdown ──
     const meta = {
@@ -114,12 +107,12 @@ async function main() {
       lastSuccessfulSync: now,
       lastAttempted: now,
     };
-    const md = renderPilot(pilotId, allowed, meta);
+    const md = renderPilot(pilotId, config, meta);
     const mdPath = join(pilotsDir, `${pilotId}.md`);
     writeFileSync(mdPath, md + '\n');
 
     // ── Fetch string resources (pilot-level, default locale) ──
-    const locale = deriveLocale(allowed);
+    const locale = deriveLocale(config);
     const stringsResult = await fetchStringResources(pilotId, { baseUrl, token: TOKEN, locale });
 
     if (stringsResult.ok) {
@@ -145,7 +138,7 @@ async function main() {
     }
 
     results.ok.push(pilotId);
-    console.log(`[sync] Pilot ${pilotId} OK (${Object.keys(allowed).length} fields)`);
+    console.log(`[sync] Pilot ${pilotId} OK (${Object.keys(config).length} fields)`);
   }
 
   // ── All-auth short-circuit ──
@@ -187,10 +180,6 @@ async function main() {
   }
 
   // ── Exit code ──
-  if (hasUnknownFields) {
-    console.error('[sync] EXITING NON-ZERO: unknown fields detected. Review _meta/unknown_fields.json');
-    process.exit(3);
-  }
   if (hasScreenHits) {
     console.error('[sync] EXITING NON-ZERO: sensitive-pattern hits. Review _meta/screen_hits.json');
     process.exit(4);
@@ -209,8 +198,8 @@ async function main() {
  * Pull default_locale from frontend_configs.kvs and normalize to en_US form.
  * Falls back to en_US when missing or unparseable.
  */
-function deriveLocale(allowed) {
-  const raw = allowed.frontend_configs;
+function deriveLocale(config) {
+  const raw = config.frontend_configs;
   if (typeof raw !== 'string') return 'en_US';
   try {
     const parsed = JSON.parse(raw);

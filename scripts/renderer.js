@@ -6,7 +6,7 @@
  * Render a pilot config into a Glean-friendly markdown document.
  *
  * @param {string|number} pilotId
- * @param {object} config — the allowlisted config object (top-level keys -> JSON strings with kvs)
+ * @param {object} config — pilot config object (top-level keys -> JSON strings with kvs)
  * @param {object} meta — { lastSuccessfulSync, lastAttempted, lastError?, env }
  * @returns {string} — markdown string
  */

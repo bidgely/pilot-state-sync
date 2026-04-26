@@ -11,8 +11,8 @@ Manual edits to pilot files will be overwritten on the next sync run.
 
 1. GitHub Actions runs `scripts/sync.js` on an hourly schedule.
 2. For each pilot ID, it fetches `/entities/pilot/{id}/configs` from the Bidgely API.
-3. Configs are filtered through an allowlist (`scripts/allowlist.json`) and screened
-   for sensitive patterns before writing.
+3. Configs are screened for sensitive patterns before writing. Any sensitive-pattern
+   hit hard-fails the run; new field types are surfaced as workflow notices.
 4. Each pilot gets a `.json` (raw data) and `.md` (Glean-friendly markdown) file.
 5. Changes are committed only when data actually changed (diff-only commits).
 6. Glean indexes this repo via its GitHub connector. Ask Glean "what is pilot 20018's

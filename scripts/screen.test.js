@@ -1,29 +1,7 @@
-// screen.test.js — tests for allowlist filter + sensitive-pattern screen
+// screen.test.js — tests for sensitive-pattern screen
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { filterByAllowlist, screenValue, screenConfig, screenStrings, scrubBearer } from './screen.js';
-
-describe('filterByAllowlist', () => {
-  it('passes through allowlisted keys', () => {
-    const input = { bill_projection: '{"kvs":[]}', disagg_preference: '{"kvs":[]}' };
-    const { allowed, unknownFields } = filterByAllowlist(input);
-    assert.deepStrictEqual(Object.keys(allowed).sort(), ['bill_projection', 'disagg_preference']);
-    assert.deepStrictEqual(unknownFields, []);
-  });
-
-  it('catches unknown keys', () => {
-    const input = { bill_projection: '{}', brand_new_secret_field: '{}' };
-    const { allowed, unknownFields } = filterByAllowlist(input);
-    assert.ok(!('brand_new_secret_field' in allowed));
-    assert.deepStrictEqual(unknownFields, ['brand_new_secret_field']);
-  });
-
-  it('handles empty object', () => {
-    const { allowed, unknownFields } = filterByAllowlist({});
-    assert.deepStrictEqual(allowed, {});
-    assert.deepStrictEqual(unknownFields, []);
-  });
-});
+import { screenValue, screenConfig, screenStrings, scrubBearer } from './screen.js';
 
 describe('screenValue', () => {
   it('returns null for clean config values', () => {
