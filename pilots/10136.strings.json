@@ -3960,7 +3960,7 @@
     "com.bidgely.cloud.core.api.profile.appliance.bc.current.usage.lower.than.previous.usage.text": "You used a lot less electricity compared to the previous months. So only a few appliances were detected. Were you away for part of the month?",
     "com.bidgely.cloud.whatif.26Years": "26 years",
     "com.bidgely.cloud.core.lib.action.description.A_P_E_HV_001": "Explore how a smart thermostat can help you save.",
-    "UTILITY_INFO.EMAIL": "Oona.Gonzales@nmgco.com",
+    "UTILITY_INFO.EMAIL": "energy.efficiency@nmgco.com",
     "com.bidgely.cloud.email.newRecoUI.BillProjection.belowAvg.subHeadLine": "Based on this projection we have selected the following tips:",
     "com.bidgely.cloud.core.lib.action.description.A_P_E_HV_002": "You can help keep both these energy costs down by using a smart thermostat.",
     "com.bidgely.cloud.email.subject.enrol.eher": "This is Enroll Eher Subject.",
