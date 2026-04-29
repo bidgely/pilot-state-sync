@@ -620,7 +620,7 @@
     "SPONSORED_RECO.TITLE": "Energy Co Programs",
     "LOGIN_SCREEN.REQUIRED_PASSWORD": "The Password field is required.",
     "com.bidgely.cloud.email.sentences.tierAlert": "You&rsquo;re approaching Tier %s in your Utility Rate Plan, which means higher rates.Try to be extra energy-conscious until the end of your billing cycle!",
-    "com.bidgely.cloud.dashboard.env.widget.trees.plural": "It takes <span style='color: rgba(var(--bgl_green_500), 1)'>%s trees</span> to balance your <b>CO<sub>2</sub></b> impact based on <b>%s kWh</b> used in the last period.",
+    "com.bidgely.cloud.dashboard.env.widget.trees.plural": "Na vyrovnanie vášho <b>CO<sub>2</sub></b> dopadu by bolo potrebných <span style='color: rgba(var(--bgl_green_500), 1)'>%s stromov</span>. vychádzajúc z čistej spotreby <b>%s kWh</b> za posledné obdobie.",
     "com.bidgely.cloud.email.summer.seasonal.alert.third.tip.image": "http://d2fnr989se7g4y.cloudfront.net/emails/timer.png",
     "com.bidgely.cloud.email.sentences.reco4Title": "Use a smart power strip and save power",
     "com.bidgely.cloud.email.ms.demandChargesText": "Demand Charges",
