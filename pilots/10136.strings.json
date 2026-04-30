@@ -3627,7 +3627,7 @@
     "com.bidgely.cloud.survey.question.imageUpload3.1": "Image Upload 3",
     "INSIGHT_USAGE.SOLAR.TOU.INFO.OFF_PEAK.TIME": "6 pm - 10 am",
     "MANAGED_CHARGING.SET_ADDRESS.DESCRIPTION": "We require monitoring of your EV’s home charging to calculate your monthly reward.",
-    "com.bidgely.cloud.survey.standard.questions.yard.hardscapearea.percentage.1": "How much of your yard is hardscape.?",
+    "com.bidgely.cloud.survey.standard.questions.yard.hardscapearea.percentage.1": "How much of your yard is hardscape? Hardscape refers to non-living landscape structures like stone patios, concrete walkways, and retaining walls.",
     "SHC_WIDGET.OUTLINE_WATER.GOOD.CONSUMPTION": "<div class=\"differ {outlineBorder}-outline\"><span>You spent<div class=\"outlined-consumption  {outlineCostDigits}-digit {outlineContent}-content\"> {costValue} {consumptionUnit} </div><div class='efficiency'><span class=\"{outlineContent}-content\"> more </span> on water </div><div class='outlined-compare'> than efficient homes</div></span></div>",
     "PREFERENCE.SETTINGS.LANGUAGE.SAVE": "Save Changes",
     "dummy1": "this is used by DETO to refresh cache",
