@@ -2775,7 +2775,7 @@
     "com.bidgely.cloud.survey.standard.none.1": "None",
     "HBA.BILL_ANALYSIS_V3.INFO.APPLIANCE.REFRIGERATION": "Chladenie potravín",
     "com.bidgely.cloud.email.gen.ai.nbi.program.participation.text": "%s homes have already participated",
-    "ENG_CARE.NOTIFICATION.TYPE.USER_WELCOME": "Vitajte užívateľa",
+    "ENG_CARE.NOTIFICATION.TYPE.USER_WELCOME": "Uvítací email",
     "QR_CODE_WITH_SURVEY.QUESTION_GROUP.HP.BUSINESSTIMINGS": "Operating hours",
     "com.bidgely.cloud.notifications.sms.expiryPage2.dev4Text": "- &hellip; and much more!",
     "com.bidgely.cloud.survey.questions.metadata.lighting.lightSocketAccessible.1": "Is light socket accessible / not recessed?",
