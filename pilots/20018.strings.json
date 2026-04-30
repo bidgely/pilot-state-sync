@@ -1955,7 +1955,7 @@
     "com.bidgely.insight.selfcomparein.highest.5": "Your highest usage ${PICK_UNIT_TYPE} in the last ${COMPARE_UNIT_COUNT} ${COMPARE_UNIT_TYPE} was ${PICK_UNIT_TYPE_VALUE}. Do you remember why?",
     "HOME.USAGE_SUMMARY.USAGE_SUMMARY_V2.USAGE_AS_PREVIOUS": "Predchádzajúca spotreba",
     "com.bidgely.cloud.email.text.footer.faq.eher.url": "",
-    "com.bidgely.insight.selfcomparein.highest.week.v2": "Vedeli ste, že ${PICK_UNIT_TYPE_VALUE} boli dni s najvyššou spotrebou energie vo vašej domácnosti počas obdobia do ${BILL_END_MONTH_IN_WORDS_DAY_SPACE}",
+    "com.bidgely.insight.selfcomparein.highest.week.v2": "Vedeli ste, že ${PICK_UNIT_TYPE_VALUE} boli dni s najvyššou spotrebou energie vo vašej domácnosti počas obdobia do ${BILL_END_DAY_MONTH_4DIGIT_YEAR_SLASH}",
     "USAGE_SHC_APPLIANCE.CHART.SERIES.YOUR_HOME": "Your home",
     "com.bidgely.insight.selfappliancecomparewith.highest.heating.3": "You used ${USAGE_DELTA_PERCENTAGE}% more in heating compared to your previous bill period.",
     "com.bidgely.cloud.whatif.poolpump.monthsPerYear": "Months/Year",
