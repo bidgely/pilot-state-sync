@@ -10,12 +10,16 @@ Manual edits to pilot files will be overwritten on the next sync run.
 ## How it works
 
 1. GitHub Actions runs `scripts/sync.js` on an hourly schedule.
-2. For each pilot ID, it fetches `/entities/pilot/{id}/configs` from the Bidgely API.
-3. Configs are screened for sensitive patterns before writing. Any sensitive-pattern
+2. Phase 2.5 writes environment-scoped outputs under `pilots/{env}/` and `_meta/{env}/`.
+3. The first rollout activates `nonprodqa` only, minting a short-lived API token at
+   runtime via `client_credentials` with a Basic auth secret.
+4. `uat` and `prod` remain placeholders until their auth details are wired.
+5. For each pilot ID, it fetches `/entities/pilot/{id}/configs` from the Bidgely API.
+6. Configs are screened for sensitive patterns before writing. Any sensitive-pattern
    hit hard-fails the run; new field types are surfaced as workflow notices.
-4. Each pilot gets a `.json` (raw data) and `.md` (Glean-friendly markdown) file.
-5. Changes are committed only when data actually changed (diff-only commits).
-6. Glean indexes this repo via its GitHub connector. Ask Glean "what is pilot 20018's
+7. Each pilot gets a `.json` (raw data) and `.md` (Glean-friendly markdown) file.
+8. Changes are committed only when data actually changed (diff-only commits).
+9. Glean indexes this repo via its GitHub connector. Ask Glean "what is pilot 20018's
    bill projection config?" and get the answer.
 
 ## Zero-dependency rule
@@ -28,13 +32,20 @@ dependencies without explicit team review.
 ## Setup
 
 1. Create GitHub Actions secrets:
-   - `BIDGELY_API_TOKEN` — bearer token for the API
+   - `BIDGELY_BASIC_AUTH_NONPRODQA` — prebuilt Base64 payload for
+     `Authorization: Basic <secret>` when minting the `nonprodqa` access token
 2. Create GitHub Actions variables:
-   - `PILOT_CONFIGS` — JSON mapping of pilot ID to API base URL, e.g.
-     `{"20018":"https://api-server-nashville-uat.bidgely.com","20019":"https://api-server-other.bidgely.com"}`
-   - `BIDGELY_ENV` — environment name, e.g. `uat`
+   - `PILOT_CONFIGS_NONPRODQA` — JSON mapping of pilot ID to API base URL
+   - `BIDGELY_TOKEN_URL_NONPRODQA` — token endpoint URL
+   - `BIDGELY_TOKEN_MODE_NONPRODQA=client_credentials`
+   - `BIDGELY_TOKEN_SCOPE_NONPRODQA=all`
+   - `LEVELS_OF_INTEREST` — JSON array of entity levels to fetch
+   - Optional token-minting knobs:
+     `BIDGELY_ACCESS_TOKEN_FIELD_NONPRODQA`,
+     `BIDGELY_TOKEN_EXTRA_BODY_NONPRODQA`
 3. Run the workflow manually first (Actions > Pilot Config Sync > Run workflow).
-4. Eyeball the output. Only enable the hourly schedule after a clean manual run.
+4. Eyeball the `nonprodqa` output. `uat` and `prod` should log as placeholders until
+   their auth details are added.
 
 ## Running tests
 

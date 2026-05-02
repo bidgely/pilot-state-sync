@@ -16,6 +16,9 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    env:
+      LEVELS_OF_INTEREST: ${{ vars.LEVELS_OF_INTEREST }}
+      REPO_ROOT: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@v4
 
@@ -28,14 +31,36 @@ jobs:
           git config user.name "pilot-state-sync[bot]"
           git config user.email "pilot-state-sync[bot]@users.noreply.github.com"
 
-      - name: Run sync
+      - name: Sync nonprodqa
         env:
-          BIDGELY_API_TOKEN: ${{ secrets.BIDGELY_API_TOKEN }}
-          PILOT_CONFIGS: ${{ vars.PILOT_CONFIGS }}
-          BIDGELY_ENV: ${{ vars.BIDGELY_ENV }}
-          LEVELS_OF_INTEREST: ${{ vars.LEVELS_OF_INTEREST }}
-          REPO_ROOT: ${{ github.workspace }}
-        run: node scripts/sync.js
+          BIDGELY_TOKEN_URL: ${{ vars.BIDGELY_TOKEN_URL_NONPRODQA }}
+          BIDGELY_TOKEN_MODE: ${{ vars.BIDGELY_TOKEN_MODE_NONPRODQA }}
+          BIDGELY_BASIC_AUTH: ${{ secrets.BIDGELY_BASIC_AUTH_NONPRODQA }}
+          BIDGELY_TOKEN_SCOPE: ${{ vars.BIDGELY_TOKEN_SCOPE_NONPRODQA }}
+          BIDGELY_ACCESS_TOKEN_FIELD: ${{ vars.BIDGELY_ACCESS_TOKEN_FIELD_NONPRODQA }}
+          BIDGELY_TOKEN_EXTRA_BODY: ${{ vars.BIDGELY_TOKEN_EXTRA_BODY_NONPRODQA }}
+          PILOT_CONFIGS: ${{ vars.PILOT_CONFIGS_NONPRODQA }}
+          BIDGELY_ENV: nonprodqa
+        run: |
+          if [ -z "$PILOT_CONFIGS" ]; then
+            echo "[sync] Skipping nonprodqa: configure PILOT_CONFIGS_NONPRODQA to enable this environment."
+            exit 0
+          fi
+          if [ -z "$BIDGELY_TOKEN_URL" ] || [ -z "$BIDGELY_BASIC_AUTH" ]; then
+            echo "[sync] Missing token mint configuration for nonprodqa."
+            exit 1
+          fi
+          TOKEN="$(node scripts/mint-token.js)"
+          echo "::add-mask::$TOKEN"
+          BIDGELY_API_TOKEN="$TOKEN" node scripts/sync.js
+
+      - name: Uat placeholder
+        run: |
+          echo "[sync] Skipping uat: Phase 2.5 currently activates nonprodqa only."
+
+      - name: Prod placeholder
+        run: |
+          echo "[sync] Skipping prod: Phase 2.5 currently activates nonprodqa only."
 
       - name: Upload _meta as artifact
         if: always()

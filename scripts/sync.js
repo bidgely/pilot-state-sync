@@ -2,7 +2,7 @@
 // sync.js — orchestration: fetch, screen, render, write, commit
 // Zero npm dependencies. Uses native node:fs, node:crypto, node:child_process.
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { execSync } from 'node:child_process';
@@ -51,11 +51,14 @@ if (PILOT_IDS.length === 0) { console.error('PILOT_CONFIGS has no entries'); pro
 
 // ── Paths ────────────────────────────────────────────────────────────
 
-const pilotsDir = join(REPO_ROOT, 'pilots');
-const metaDir = join(REPO_ROOT, '_meta');
+const pilotsRootDir = join(REPO_ROOT, 'pilots');
+const metaRootDir = join(REPO_ROOT, '_meta');
+const pilotsDir = join(pilotsRootDir, ENV_NAME);
+const metaDir = join(metaRootDir, ENV_NAME);
 
 mkdirSync(pilotsDir, { recursive: true });
 mkdirSync(metaDir, { recursive: true });
+cleanupLegacySingleEnvLayout();
 
 // ── Per-(pilot, env) processor ───────────────────────────────────────
 
@@ -252,7 +255,7 @@ async function main() {
 
   // ── Git commit (diff-only) ──
   try {
-    execSync('git add pilots/ _meta/', { cwd: REPO_ROOT, stdio: 'pipe' });
+    execSync('git add -A pilots/ _meta/', { cwd: REPO_ROOT, stdio: 'pipe' });
     execSync('git diff --cached --quiet', { cwd: REPO_ROOT, stdio: 'pipe' });
     console.log('[sync] No changes detected. Skipping commit.');
   } catch (diffErr) {
@@ -305,6 +308,43 @@ function readJsonSafe(path, fallback) {
   } catch {
     return fallback;
   }
+}
+
+function cleanupLegacySingleEnvLayout() {
+  removeLegacyPilotEntries();
+  removeLegacyMetaEntries();
+}
+
+function removeLegacyPilotEntries() {
+  if (!existsSync(pilotsRootDir)) return;
+
+  for (const entry of readdirSync(pilotsRootDir, { withFileTypes: true })) {
+    if (entry.name === ENV_NAME) continue;
+    const fullPath = join(pilotsRootDir, entry.name);
+
+    if (entry.isFile() && isLegacyPilotFile(entry.name)) {
+      rmSync(fullPath, { force: true });
+      continue;
+    }
+
+    if (entry.isDirectory() && entry.name.endsWith('.levels')) {
+      rmSync(fullPath, { recursive: true, force: true });
+    }
+  }
+}
+
+function removeLegacyMetaEntries() {
+  if (!existsSync(metaRootDir)) return;
+
+  for (const entry of readdirSync(metaRootDir, { withFileTypes: true })) {
+    if (entry.name === ENV_NAME) continue;
+    if (!entry.isFile() || !entry.name.endsWith('.json')) continue;
+    rmSync(join(metaRootDir, entry.name), { force: true });
+  }
+}
+
+function isLegacyPilotFile(name) {
+  return name.endsWith('.json') || name.endsWith('.md');
 }
 
 /**
