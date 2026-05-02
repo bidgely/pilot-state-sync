@@ -9,6 +9,7 @@ import { execSync } from 'node:child_process';
 import { fetchPilot, fetchStringResources, ErrorKind } from './fetcher.js';
 import { screenConfig, screenStrings, scrubBearer } from './screen.js';
 import { renderPilot } from './renderer.js';
+import { writeJson } from './json-normalize.js';
 
 // ── Config from environment ──────────────────────────────────────────
 
@@ -39,6 +40,101 @@ const metaDir = join(REPO_ROOT, '_meta');
 mkdirSync(pilotsDir, { recursive: true });
 mkdirSync(metaDir, { recursive: true });
 
+// ── Per-(pilot, env) processor ───────────────────────────────────────
+
+/**
+ * Fetch + screen + write one pilot's data for one environment.
+ *
+ * Returns:
+ *   { ok: true,  hadHits: boolean, fieldCount: number }
+ *   { ok: false, kind: ErrorKind,  message: string }
+ */
+async function processPilotEnv(pilotId, env, baseUrl, token, now) {
+  const fetchResult = await fetchPilot(pilotId, { baseUrl, token });
+
+  if (!fetchResult.ok) {
+    const { kind, message } = fetchResult.error;
+    const safeMessage = scrubBearer(message);
+    console.error(`[sync] Pilot ${pilotId} FAILED: ${kind} — ${safeMessage}`);
+
+    // Preserve prior state — do NOT overwrite existing files
+    // But update the staleness header in the markdown if it exists
+    updateStalenessHeader(pilotId, now, `${kind}: ${safeMessage}`);
+
+    return { ok: false, kind, message: safeMessage };
+  }
+
+  const config = fetchResult.data;
+  let hadHits = false;
+
+  // ── New-field detection (informational, no fail) ──
+  const jsonPath = join(pilotsDir, `${pilotId}.json`);
+  const prevConfig = readJsonSafe(jsonPath, {});
+  const prevKeys = new Set(Object.keys(prevConfig));
+  const newKeys = Object.keys(config).filter(k => !prevKeys.has(k));
+  if (newKeys.length > 0 && Object.keys(prevConfig).length > 0) {
+    console.log(`::notice::Pilot ${pilotId}: ${newKeys.length} new field(s): ${newKeys.join(', ')}`);
+  }
+
+  // ── Sensitive-pattern screen ──
+  const screenHits = screenConfig(config);
+
+  if (screenHits.length > 0) {
+    console.warn(`[sync] Pilot ${pilotId}: ${screenHits.length} sensitive-pattern hits`);
+    for (const hit of screenHits) {
+      console.warn(`[sync]   ${hit.fieldName} → ${hit.patternName}`);
+    }
+    hadHits = true;
+
+    // Write field names only, never values
+    const hitsPath = join(metaDir, 'screen_hits.json');
+    const existing = readJsonSafe(hitsPath, {});
+    existing[pilotId] = screenHits.map(h => ({ field: h.fieldName, pattern: h.patternName }));
+    writeJson(hitsPath, existing);
+  }
+
+  // ── Write JSON ──
+  writeJson(jsonPath, config);
+
+  // ── Write Markdown ──
+  const meta = {
+    env,
+    lastSuccessfulSync: now,
+    lastAttempted: now,
+  };
+  const md = renderPilot(pilotId, config, meta);
+  const mdPath = join(pilotsDir, `${pilotId}.md`);
+  writeFileSync(mdPath, md + '\n');
+
+  // ── Fetch string resources (pilot-level, default locale) ──
+  const locale = deriveLocale(config);
+  const stringsResult = await fetchStringResources(pilotId, { baseUrl, token, locale });
+
+  if (stringsResult.ok) {
+    const stringsHits = screenStrings(stringsResult.data);
+    if (stringsHits.length > 0) {
+      console.warn(`[sync] Pilot ${pilotId} strings (${locale}): ${stringsHits.length} sensitive-pattern hits`);
+      for (const hit of stringsHits) {
+        console.warn(`[sync]   ${hit.fieldName} → ${hit.patternName}`);
+      }
+      hadHits = true;
+      const hitsPath = join(metaDir, 'screen_hits.json');
+      const existing = readJsonSafe(hitsPath, {});
+      existing[`${pilotId}.strings`] = stringsHits.map(h => ({ field: h.fieldName, pattern: h.patternName }));
+      writeJson(hitsPath, existing);
+    }
+
+    const stringsPath = join(pilotsDir, `${pilotId}.strings.json`);
+    writeJson(stringsPath, stringsResult.data);
+    console.log(`[sync] Pilot ${pilotId} strings OK (${locale}, ${Object.keys(stringsResult.data).length} keys)`);
+  } else {
+    const { kind, message } = stringsResult.error;
+    console.warn(`[sync] Pilot ${pilotId} strings (${locale}) FAILED: ${kind} — ${scrubBearer(message)}`);
+  }
+
+  return { ok: true, hadHits, fieldCount: Object.keys(config).length };
+}
+
 // ── Main ─────────────────────────────────────────────────────────────
 
 async function main() {
@@ -53,92 +149,19 @@ async function main() {
     console.log(`[sync] Fetching pilot ${pilotId}...`);
 
     const baseUrl = PILOT_CONFIGS[pilotId];
-    const fetchResult = await fetchPilot(pilotId, { baseUrl, token: TOKEN });
+    const result = await processPilotEnv(pilotId, ENV_NAME, baseUrl, TOKEN, now);
 
-    if (!fetchResult.ok) {
-      const { kind, message } = fetchResult.error;
-      console.error(`[sync] Pilot ${pilotId} FAILED: ${kind} — ${scrubBearer(message)}`);
-
-      if (kind !== ErrorKind.AUTH) allAuthFailure = false;
-
-      results.failures.push({ id: pilotId, kind, message: scrubBearer(message) });
-
-      // Preserve prior state — do NOT overwrite existing files
-      // But update the staleness header in the markdown if it exists
-      updateStalenessHeader(pilotId, now, `${kind}: ${scrubBearer(message)}`);
+    if (!result.ok) {
+      if (result.kind !== ErrorKind.AUTH) allAuthFailure = false;
+      results.failures.push({ id: pilotId, kind: result.kind, message: result.message });
       continue;
     }
 
     allAuthFailure = false;
-    const config = fetchResult.data;
-
-    // ── New-field detection (informational, no fail) ──
-    const jsonPath = join(pilotsDir, `${pilotId}.json`);
-    const prevConfig = readJsonSafe(jsonPath, {});
-    const prevKeys = new Set(Object.keys(prevConfig));
-    const newKeys = Object.keys(config).filter(k => !prevKeys.has(k));
-    if (newKeys.length > 0 && Object.keys(prevConfig).length > 0) {
-      console.log(`::notice::Pilot ${pilotId}: ${newKeys.length} new field(s): ${newKeys.join(', ')}`);
-    }
-
-    // ── Sensitive-pattern screen ──
-    const screenHits = screenConfig(config);
-
-    if (screenHits.length > 0) {
-      console.warn(`[sync] Pilot ${pilotId}: ${screenHits.length} sensitive-pattern hits`);
-      for (const hit of screenHits) {
-        console.warn(`[sync]   ${hit.fieldName} → ${hit.patternName}`);
-      }
-      hasScreenHits = true;
-
-      // Write field names only, never values
-      const hitsPath = join(metaDir, 'screen_hits.json');
-      const existing = readJsonSafe(hitsPath, {});
-      existing[pilotId] = screenHits.map(h => ({ field: h.fieldName, pattern: h.patternName }));
-      writeFileSync(hitsPath, JSON.stringify(existing, null, 2) + '\n');
-    }
-
-    // ── Write JSON ──
-    writeFileSync(jsonPath, JSON.stringify(config, null, 2) + '\n');
-
-    // ── Write Markdown ──
-    const meta = {
-      env: ENV_NAME,
-      lastSuccessfulSync: now,
-      lastAttempted: now,
-    };
-    const md = renderPilot(pilotId, config, meta);
-    const mdPath = join(pilotsDir, `${pilotId}.md`);
-    writeFileSync(mdPath, md + '\n');
-
-    // ── Fetch string resources (pilot-level, default locale) ──
-    const locale = deriveLocale(config);
-    const stringsResult = await fetchStringResources(pilotId, { baseUrl, token: TOKEN, locale });
-
-    if (stringsResult.ok) {
-      const stringsHits = screenStrings(stringsResult.data);
-      if (stringsHits.length > 0) {
-        console.warn(`[sync] Pilot ${pilotId} strings (${locale}): ${stringsHits.length} sensitive-pattern hits`);
-        for (const hit of stringsHits) {
-          console.warn(`[sync]   ${hit.fieldName} → ${hit.patternName}`);
-        }
-        hasScreenHits = true;
-        const hitsPath = join(metaDir, 'screen_hits.json');
-        const existing = readJsonSafe(hitsPath, {});
-        existing[`${pilotId}.strings`] = stringsHits.map(h => ({ field: h.fieldName, pattern: h.patternName }));
-        writeFileSync(hitsPath, JSON.stringify(existing, null, 2) + '\n');
-      }
-
-      const stringsPath = join(pilotsDir, `${pilotId}.strings.json`);
-      writeFileSync(stringsPath, JSON.stringify(stringsResult.data, null, 2) + '\n');
-      console.log(`[sync] Pilot ${pilotId} strings OK (${locale}, ${Object.keys(stringsResult.data).length} keys)`);
-    } else {
-      const { kind, message } = stringsResult.error;
-      console.warn(`[sync] Pilot ${pilotId} strings (${locale}) FAILED: ${kind} — ${scrubBearer(message)}`);
-    }
+    if (result.hadHits) hasScreenHits = true;
 
     results.ok.push(pilotId);
-    console.log(`[sync] Pilot ${pilotId} OK (${Object.keys(config).length} fields)`);
+    console.log(`[sync] Pilot ${pilotId} OK (${result.fieldCount} fields)`);
   }
 
   // ── All-auth short-circuit ──
@@ -161,12 +184,12 @@ async function main() {
     failures: results.failures,
     schemaHash,
   };
-  writeFileSync(join(metaDir, 'last_run.json'), JSON.stringify(lastRun, null, 2) + '\n');
+  writeJson(join(metaDir, 'last_run.json'), lastRun);
 
   // ── Git commit (diff-only) ──
   try {
     execSync('git add pilots/ _meta/', { cwd: REPO_ROOT, stdio: 'pipe' });
-    const diff = execSync('git diff --cached --quiet', { cwd: REPO_ROOT, stdio: 'pipe' }).toString();
+    execSync('git diff --cached --quiet', { cwd: REPO_ROOT, stdio: 'pipe' });
     console.log('[sync] No changes detected. Skipping commit.');
   } catch (diffErr) {
     // git diff --cached --quiet exits non-zero when there ARE changes
