@@ -81,6 +81,7 @@ jobs:
           BIDGELY_TOKEN_EXTRA_BODY: ${{ vars.BIDGELY_TOKEN_EXTRA_BODY_PROD_EU }}
           PILOT_CONFIGS: ${{ vars.PILOT_CONFIGS_PROD_EU }}
           BIDGELY_ENV: prod
+          BIDGELY_MERGE_LAST_RUN: "true"
         run: |
           if [ -z "$PILOT_CONFIGS" ]; then
             echo "[sync] Skipping prod eu: configure PILOT_CONFIGS_PROD_EU to enable this region."
@@ -104,6 +105,7 @@ jobs:
           BIDGELY_TOKEN_EXTRA_BODY: ${{ vars.BIDGELY_TOKEN_EXTRA_BODY_PROD_NA }}
           PILOT_CONFIGS: ${{ vars.PILOT_CONFIGS_PROD_NA }}
           BIDGELY_ENV: prod
+          BIDGELY_MERGE_LAST_RUN: "true"
         run: |
           if [ -z "$PILOT_CONFIGS" ]; then
             echo "[sync] Skipping prod na: configure PILOT_CONFIGS_PROD_NA to enable this region."
@@ -127,6 +129,7 @@ jobs:
           BIDGELY_TOKEN_EXTRA_BODY: ${{ vars.BIDGELY_TOKEN_EXTRA_BODY_PROD_NA2 }}
           PILOT_CONFIGS: ${{ vars.PILOT_CONFIGS_PROD_NA2 }}
           BIDGELY_ENV: prod
+          BIDGELY_MERGE_LAST_RUN: "true"
         run: |
           if [ -z "$PILOT_CONFIGS" ]; then
             echo "[sync] Skipping prod na2: configure PILOT_CONFIGS_PROD_NA2 to enable this region."

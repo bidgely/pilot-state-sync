@@ -239,18 +239,7 @@ async function main() {
   }
 
   // ── Write _meta/last_run.json ──
-  const schemaHash = createHash('sha256')
-    .update(JSON.stringify(Object.keys(results.ok.length > 0 ? readJsonSafe(join(pilotsDir, `${results.ok[0]}.json`), {}) : {}).sort()))
-    .digest('hex')
-    .slice(0, 12);
-
-  const lastRun = {
-    timestamp: now,
-    env: ENV_NAME,
-    ok: results.ok,
-    failures: results.failures,
-    schemaHash,
-  };
+  const lastRun = finalizeLastRun(now, results);
   writeJson(join(metaDir, 'last_run.json'), lastRun);
 
   // ── Git commit (diff-only) ──
@@ -282,6 +271,51 @@ async function main() {
   console.log(`[sync] Done. ${results.ok.length} pilots synced successfully.`);
 }
 
+export function finalizeLastRun(now, results, opts = {}) {
+  const metaPath = opts.metaPath || join(metaDir, 'last_run.json');
+  const existing = opts.existing ?? readJsonSafe(metaPath, null);
+  const schemaHash = opts.schemaHash || computeEnvSchemaHash();
+  const envName = opts.envName || ENV_NAME;
+  const shouldMerge = opts.mergeLastRun ?? (process.env.BIDGELY_MERGE_LAST_RUN === 'true');
+
+  const current = {
+    timestamp: now,
+    env: envName,
+    ok: results.ok,
+    failures: results.failures,
+    schemaHash,
+  };
+
+  if (!shouldMerge || !existing || existing.env !== envName) {
+    return current;
+  }
+
+  const okSet = new Set([...(Array.isArray(existing.ok) ? existing.ok : []), ...current.ok]);
+  const failureMap = new Map();
+
+  for (const failure of Array.isArray(existing.failures) ? existing.failures : []) {
+    if (!failure || typeof failure.id !== 'string') continue;
+    failureMap.set(failure.id, failure);
+  }
+
+  for (const okId of current.ok) {
+    failureMap.delete(okId);
+  }
+
+  for (const failure of current.failures) {
+    failureMap.set(failure.id, failure);
+    okSet.delete(failure.id);
+  }
+
+  return {
+    timestamp: current.timestamp,
+    env: current.env,
+    ok: Array.from(okSet).sort(),
+    failures: Array.from(failureMap.values()).sort((a, b) => a.id.localeCompare(b.id)),
+    schemaHash: current.schemaHash,
+  };
+}
+
 // ── Helpers ──────────────────────────────────────────────────────────
 
 /**
@@ -308,6 +342,29 @@ function readJsonSafe(path, fallback) {
   } catch {
     return fallback;
   }
+}
+
+export function computeEnvSchemaHash(opts = {}) {
+  const dir = opts.pilotsDir || pilotsDir;
+  if (!existsSync(dir)) return createSchemaHash({});
+
+  const pilotEntries = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (!entry.isFile() || !entry.name.endsWith('.json') || entry.name.endsWith('.strings.json')) continue;
+    const pilotId = entry.name.slice(0, -'.json'.length);
+    const config = readJsonSafe(join(dir, entry.name), {});
+    pilotEntries.push([pilotId, Object.keys(config).sort()]);
+  }
+
+  pilotEntries.sort((a, b) => a[0].localeCompare(b[0]));
+  return createSchemaHash(pilotEntries);
+}
+
+function createSchemaHash(value) {
+  return createHash('sha256')
+    .update(JSON.stringify(value))
+    .digest('hex')
+    .slice(0, 12);
 }
 
 function cleanupLegacySingleEnvLayout() {
@@ -386,7 +443,9 @@ function updateStalenessHeader(pilotId, attemptTime, errorMsg) {
   }
 }
 
-main().catch(err => {
-  console.error(`[sync] Fatal: ${scrubBearer(err.message)}`);
-  process.exit(1);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch(err => {
+    console.error(`[sync] Fatal: ${scrubBearer(err.message)}`);
+    process.exit(1);
+  });
+}

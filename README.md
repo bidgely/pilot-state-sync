@@ -16,12 +16,14 @@ Manual edits to pilot files will be overwritten on the next sync run.
    with a Basic auth secret.
 5. `prod` runs as three region-specific minted-token steps that all write into the
    shared `pilots/prod/` and `_meta/prod/` trees.
-6. For each pilot ID, it fetches `/entities/pilot/{id}/configs` from the Bidgely API.
-7. Configs are screened for sensitive patterns before writing. Any sensitive-pattern
+6. The `prod` steps merge into one `_meta/prod/last_run.json` summary so the env-level
+   metadata reflects all prod pilot subsets, not just the last region step.
+7. For each pilot ID, it fetches `/entities/pilot/{id}/configs` from the Bidgely API.
+8. Configs are screened for sensitive patterns before writing. Any sensitive-pattern
    hit hard-fails the run; new field types are surfaced as workflow notices.
-8. Each pilot gets a `.json` (raw data) and `.md` (Glean-friendly markdown) file.
-9. Changes are committed only when data actually changed (diff-only commits).
-10. Glean indexes this repo via its GitHub connector. Ask Glean "what is pilot 20018's
+9. Each pilot gets a `.json` (raw data) and `.md` (Glean-friendly markdown) file.
+10. Changes are committed only when data actually changed (diff-only commits).
+11. Glean indexes this repo via its GitHub connector. Ask Glean "what is pilot 20018's
    bill projection config?" and get the answer.
 
 ## Zero-dependency rule

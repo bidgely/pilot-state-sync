@@ -87,7 +87,8 @@ and re-run the workflow. Empty/unset = root only (legacy behavior).
 
 Phase 2.5 uses env-scoped storage for all environments. `prod` is split into three
 region-specific workflow steps that all write into the shared `prod` tree using
-disjoint pilot subsets.
+disjoint pilot subsets. `_meta/prod/last_run.json` is merged across those steps so
+the final env summary reflects all prod pilots from the full workflow run.
 
 Example value (committed v1 set, 39 entries):
 
