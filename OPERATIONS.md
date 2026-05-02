@@ -53,6 +53,50 @@ If a bad commit was pushed (e.g., sensitive data slipped through):
 3. Rotate any credentials that were exposed.
 4. Check if Glean has already indexed the commit (Glean re-indexes periodically).
 
+## Entity-level overrides (LEVELS_OF_INTEREST)
+
+Some pilot configs are scoped narrower than pilot-root, e.g.
+`20018.MONTHLY_SUMMARY.ELECTRIC` overrides `20018.MONTHLY_SUMMARY` overrides
+`20018`. The runtime resolver picks the deepest level that is set. If the snapshot
+only covers pilot-root, you cannot see what the resolver will actually return.
+
+`LEVELS_OF_INTEREST` lists entity-ID suffixes (relative to the pilot ID) that the
+sync should fetch per pilot. For each entry, the cron calls
+`/entities/pilot/{pilotId}.{level}/configs`. 404 means "this level isn't configured
+for this pilot" and is skipped silently. Successes are written to
+`pilots/{pilotId}.levels/{level}.json` and rendered as
+`## Entity-Level Overrides — {level}` sections in `pilots/{pilotId}.md`
+(Glean-indexable).
+
+To add or remove a level: edit `LEVELS_OF_INTEREST` in repo Settings > Variables
+and re-run the workflow. Empty/unset = root only (legacy behavior).
+
+Phase 2 ships single-env (UAT) only. Multi-env coverage (nonprodqa + prod) lands
+in Phase 2.5.
+
+Example value (committed v1 set, 39 entries):
+
+```json
+[
+  "USER_WELCOME","USER_WELCOME.ELECTRIC","USER_WELCOME.GAS",
+  "AO_SAVINGS","AO_SAVINGS.ELECTRIC","AO_SAVINGS.GAS",
+  "MONTHLY_SUMMARY","MONTHLY_SUMMARY.ELECTRIC","MONTHLY_SUMMARY.GAS",
+  "NEIGHBOURHOOD_COMPARISON","NEIGHBOURHOOD_COMPARISON.ELECTRIC","NEIGHBOURHOOD_COMPARISON.GAS",
+  "BILL_PROJECTION","BILL_PROJECTION.ELECTRIC","BILL_PROJECTION.GAS",
+  "USAGE_ALERT","USAGE_ALERT.ELECTRIC","USAGE_ALERT.GAS",
+  "SEASONAL_ALERT","SEASONAL_ALERT.ELECTRIC","SEASONAL_ALERT.GAS",
+  "PERSONALIZED_SEASONAL_ALERT","PERSONALIZED_SEASONAL_ALERT.ELECTRIC","PERSONALIZED_SEASONAL_ALERT.GAS",
+  "NBI","NBI.ELECTRIC","NBI.GAS",
+  "BUDGET_ALERT","BUDGET_ALERT.ELECTRIC","BUDGET_ALERT.GAS",
+  "WEEKLY_TRACKER","WEEKLY_TRACKER.ELECTRIC","WEEKLY_TRACKER.GAS",
+  "HER","HER.ELECTRIC","HER.GAS",
+  "WEB_DASHBOARD","WEB_DASHBOARD.ELECTRIC","WEB_DASHBOARD.GAS"
+]
+```
+
+For Phase 2 (single-level MVP), start with one entry like
+`["MONTHLY_SUMMARY.ELECTRIC"]` to validate API behavior, then expand.
+
 ## Environment variables
 
 | Variable | Type | Description |
@@ -60,3 +104,4 @@ If a bad commit was pushed (e.g., sensitive data slipped through):
 | `BIDGELY_API_TOKEN` | Secret | Bearer token for the API |
 | `PILOT_CONFIGS` | Variable | JSON mapping of pilot ID → API base URL, e.g. `{"20018":"https://..."}` |
 | `BIDGELY_ENV` | Variable | Environment name shown in markdown, e.g. `uat` |
+| `LEVELS_OF_INTEREST` | Variable | (Optional) JSON array of entity-ID suffixes to fetch per pilot in addition to pilot-root. See "Entity-level overrides" above. Default `[]` (root only). |

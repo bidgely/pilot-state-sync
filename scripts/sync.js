@@ -6,7 +6,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { execSync } from 'node:child_process';
-import { fetchPilot, fetchStringResources, ErrorKind } from './fetcher.js';
+import { fetchPilot, fetchStringResources, fetchEntityConfig, ErrorKind } from './fetcher.js';
 import { screenConfig, screenStrings, scrubBearer } from './screen.js';
 import { renderPilot } from './renderer.js';
 import { writeJson } from './json-normalize.js';
@@ -28,6 +28,23 @@ try {
 }
 
 const PILOT_IDS = Object.keys(PILOT_CONFIGS);
+
+// LEVELS_OF_INTEREST is a JSON array of entity-id suffixes (relative to pilot id),
+// e.g. ["MONTHLY_SUMMARY.ELECTRIC", "USER_WELCOME.GAS", "WEB_DASHBOARD"].
+// For each pilot, we fetch /entities/pilot/{pilotId}.{level}/configs.
+// 404 means the level doesn't exist for this pilot — expected, skipped silently.
+// Optional. Default empty array = current behavior (root only).
+let LEVELS_OF_INTEREST;
+try {
+  LEVELS_OF_INTEREST = JSON.parse(process.env.LEVELS_OF_INTEREST || '[]');
+  if (!Array.isArray(LEVELS_OF_INTEREST)) throw new Error('not an array');
+  if (!LEVELS_OF_INTEREST.every(l => typeof l === 'string' && l.length > 0)) {
+    throw new Error('all entries must be non-empty strings');
+  }
+} catch (err) {
+  console.error(`Invalid LEVELS_OF_INTEREST: ${err.message}. Expected JSON array of strings, e.g. ["MONTHLY_SUMMARY.ELECTRIC"].`);
+  process.exit(1);
+}
 
 if (!TOKEN) { console.error('Missing BIDGELY_API_TOKEN'); process.exit(1); }
 if (PILOT_IDS.length === 0) { console.error('PILOT_CONFIGS has no entries'); process.exit(1); }
@@ -96,13 +113,60 @@ async function processPilotEnv(pilotId, env, baseUrl, token, now) {
   // ── Write JSON ──
   writeJson(jsonPath, config);
 
+  // ── Fetch entity-level overrides (LEVELS_OF_INTEREST) ──
+  // Each level is fetched as /entities/pilot/{pilotId}.{level}/configs.
+  // 404 → skip silently (level doesn't exist for this pilot, expected).
+  // Other failures → log warning, continue with other levels.
+  // Successes → write to pilots/{pilotId}.levels/{level}.json + screen + accumulate.
+  const levels = {};
+  if (LEVELS_OF_INTEREST.length > 0) {
+    const levelsDir = join(pilotsDir, `${pilotId}.levels`);
+    mkdirSync(levelsDir, { recursive: true });
+
+    for (const level of LEVELS_OF_INTEREST) {
+      const entityId = `${pilotId}.${level}`;
+      const levelResult = await fetchEntityConfig(entityId, { baseUrl, token });
+
+      if (!levelResult.ok) {
+        if (levelResult.error.kind === ErrorKind.NOT_FOUND) {
+          // Expected: this level isn't configured for this pilot. Skip silently.
+          continue;
+        }
+        const safe = scrubBearer(levelResult.error.message);
+        console.warn(`[sync]   level ${level} FAILED: ${levelResult.error.kind} — ${safe}`);
+        continue;
+      }
+
+      const levelConfig = levelResult.data;
+
+      // Screen level config for sensitive patterns
+      const levelHits = screenConfig(levelConfig);
+      if (levelHits.length > 0) {
+        console.warn(`[sync] Pilot ${pilotId} level ${level}: ${levelHits.length} sensitive-pattern hits`);
+        for (const hit of levelHits) {
+          console.warn(`[sync]   ${hit.fieldName} → ${hit.patternName}`);
+        }
+        hadHits = true;
+
+        const hitsPath = join(metaDir, 'screen_hits.json');
+        const existing = readJsonSafe(hitsPath, {});
+        existing[`${pilotId}.${level}`] = levelHits.map(h => ({ field: h.fieldName, pattern: h.patternName }));
+        writeJson(hitsPath, existing);
+      }
+
+      writeJson(join(levelsDir, `${level}.json`), levelConfig);
+      levels[level] = levelConfig;
+    }
+    console.log(`[sync] Pilot ${pilotId} levels: ${Object.keys(levels).length}/${LEVELS_OF_INTEREST.length} present`);
+  }
+
   // ── Write Markdown ──
   const meta = {
     env,
     lastSuccessfulSync: now,
     lastAttempted: now,
   };
-  const md = renderPilot(pilotId, config, meta);
+  const md = renderPilot(pilotId, config, meta, levels);
   const mdPath = join(pilotsDir, `${pilotId}.md`);
   writeFileSync(mdPath, md + '\n');
 

@@ -85,4 +85,74 @@ describe('renderPilot', () => {
     assert.ok(md.includes('with\\|pipe'));
     assert.ok(md.includes('val\\|ue'));
   });
+
+  it('omits entity-level overrides when levels arg is missing', () => {
+    const md = renderPilot(20018, {}, baseMeta);
+    assert.ok(!md.includes('Entity-Level Overrides'));
+  });
+
+  it('omits entity-level overrides when levels is empty object', () => {
+    const md = renderPilot(20018, {}, baseMeta, {});
+    assert.ok(!md.includes('Entity-Level Overrides'));
+  });
+
+  it('renders one section per level, sorted alphabetically', () => {
+    const config = {
+      root_key: JSON.stringify({ kvs: [{ key: 'a', val: '1' }] })
+    };
+    const levels = {
+      'USER_WELCOME.GAS': {
+        delivery: JSON.stringify({ kvs: [{ key: 'mode', val: 'sms', configSource: 'PILOT.USER_WELCOME.GAS' }] })
+      },
+      'MONTHLY_SUMMARY.ELECTRIC': {
+        billing: JSON.stringify({ kvs: [{ key: 'enabled', val: 'true', configSource: 'PILOT.MONTHLY_SUMMARY.ELECTRIC' }] })
+      },
+    };
+    const md = renderPilot(20018, config, baseMeta, levels);
+    // Both sections present
+    assert.ok(md.includes('## Entity-Level Overrides — MONTHLY_SUMMARY.ELECTRIC'));
+    assert.ok(md.includes('## Entity-Level Overrides — USER_WELCOME.GAS'));
+    // Sorted alphabetically: MONTHLY before USER
+    const monthlyPos = md.indexOf('Entity-Level Overrides — MONTHLY_SUMMARY.ELECTRIC');
+    const userPos = md.indexOf('Entity-Level Overrides — USER_WELCOME.GAS');
+    assert.ok(monthlyPos < userPos, 'MONTHLY level should come before USER level');
+    // Inner h3 keys per level
+    assert.ok(md.includes('### billing'));
+    assert.ok(md.includes('### delivery'));
+    // Provenance from configSource visible
+    assert.ok(md.includes('PILOT.MONTHLY_SUMMARY.ELECTRIC'));
+  });
+
+  it('renders root config before entity-level overrides', () => {
+    const config = {
+      root_key: JSON.stringify({ kvs: [{ key: 'a', val: '1' }] })
+    };
+    const levels = {
+      'MONTHLY_SUMMARY': { sub: JSON.stringify({ kvs: [{ key: 'b', val: '2' }] }) }
+    };
+    const md = renderPilot(20018, config, baseMeta, levels);
+    const rootPos = md.indexOf('## root_key');
+    const overridesPos = md.indexOf('## Entity-Level Overrides');
+    assert.ok(rootPos > -1 && overridesPos > -1);
+    assert.ok(rootPos < overridesPos, 'root config should render before overrides');
+  });
+
+  it('renders empty-overrides placeholder when a level has no keys', () => {
+    const levels = { 'EMPTY_LEVEL': {} };
+    const md = renderPilot(20018, {}, baseMeta, levels);
+    assert.ok(md.includes('## Entity-Level Overrides — EMPTY_LEVEL'));
+    assert.ok(md.includes('_No overrides at this level._'));
+  });
+
+  it('skips levels whose value is null or non-object', () => {
+    const levels = {
+      'GOOD': { k: JSON.stringify({ kvs: [{ key: 'a', val: '1' }] }) },
+      'NULL_LEVEL': null,
+      'STRING_LEVEL': 'oops',
+    };
+    const md = renderPilot(20018, {}, baseMeta, levels);
+    assert.ok(md.includes('## Entity-Level Overrides — GOOD'));
+    assert.ok(!md.includes('NULL_LEVEL'));
+    assert.ok(!md.includes('STRING_LEVEL'));
+  });
 });

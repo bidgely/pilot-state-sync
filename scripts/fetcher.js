@@ -9,17 +9,23 @@ export const ErrorKind = {
   RATE_LIMIT: 'rate_limit',
   SERVER: 'server',
   NETWORK: 'network',
+  NOT_FOUND: 'not_found',
   CLIENT: 'client',
   PARSE: 'parse',
 };
 
 /**
  * Classify an error or HTTP status into an ErrorKind.
+ *
+ * 404 is its own kind (NOT_FOUND) rather than CLIENT so callers can decide:
+ *   - fetchPilot: 404 = pilot doesn't exist → real failure
+ *   - fetchEntityConfig: 404 = level doesn't exist for this pilot → skip silently
  */
 export function classifyError(err, status) {
   if (status === 401 || status === 403) return ErrorKind.AUTH;
   if (status === 429) return ErrorKind.RATE_LIMIT;
   if (status >= 500) return ErrorKind.SERVER;
+  if (status === 404) return ErrorKind.NOT_FOUND;
   if (status >= 400) return ErrorKind.CLIENT;
   if (err && (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND' || err.cause?.code === 'ECONNREFUSED')) {
     return ErrorKind.NETWORK;
@@ -60,6 +66,23 @@ export async function fetchPilot(pilotId, { baseUrl, token }) {
  */
 export async function fetchStringResources(pilotId, { baseUrl, token, locale }) {
   const url = `${baseUrl}/2.1/stringResources/pilot/${pilotId}?locale=${encodeURIComponent(locale)}`;
+  return fetchWithRetry(url, token);
+}
+
+/**
+ * Fetch one entity-level config (e.g. "20018.MONTHLY_SUMMARY.ELECTRIC").
+ * Same retry/timeout behavior as fetchPilot.
+ *
+ * Caller-side note: 404 is the EXPECTED return when this level isn't
+ * configured for the pilot — kind === ErrorKind.NOT_FOUND, treat as "skip
+ * silently," NOT as an error.
+ *
+ * @param {string} entityId — the full entity id, e.g. "20018.MONTHLY_SUMMARY.ELECTRIC"
+ * @param {object} opts — { baseUrl, token }
+ * @returns {Promise<{ ok: boolean, data?: object, error?: { kind: string, message: string } }>}
+ */
+export async function fetchEntityConfig(entityId, { baseUrl, token }) {
+  const url = `${baseUrl}/entities/pilot/${entityId}/configs`;
   return fetchWithRetry(url, token);
 }
 
