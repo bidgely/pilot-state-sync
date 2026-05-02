@@ -11,15 +11,17 @@ Manual edits to pilot files will be overwritten on the next sync run.
 
 1. GitHub Actions runs `scripts/sync.js` on an hourly schedule.
 2. Phase 2.5 writes environment-scoped outputs under `pilots/{env}/` and `_meta/{env}/`.
-3. The first rollout activates `nonprodqa` only, minting a short-lived API token at
-   runtime via `client_credentials` with a Basic auth secret.
-4. `uat` and `prod` remain placeholders until their auth details are wired.
-5. For each pilot ID, it fetches `/entities/pilot/{id}/configs` from the Bidgely API.
-6. Configs are screened for sensitive patterns before writing. Any sensitive-pattern
+3. `uat` uses the stable static bearer token flow.
+4. `nonprodqa` mints a short-lived API token at runtime via `client_credentials`
+   with a Basic auth secret.
+5. `prod` runs as three region-specific minted-token steps that all write into the
+   shared `pilots/prod/` and `_meta/prod/` trees.
+6. For each pilot ID, it fetches `/entities/pilot/{id}/configs` from the Bidgely API.
+7. Configs are screened for sensitive patterns before writing. Any sensitive-pattern
    hit hard-fails the run; new field types are surfaced as workflow notices.
-7. Each pilot gets a `.json` (raw data) and `.md` (Glean-friendly markdown) file.
-8. Changes are committed only when data actually changed (diff-only commits).
-9. Glean indexes this repo via its GitHub connector. Ask Glean "what is pilot 20018's
+8. Each pilot gets a `.json` (raw data) and `.md` (Glean-friendly markdown) file.
+9. Changes are committed only when data actually changed (diff-only commits).
+10. Glean indexes this repo via its GitHub connector. Ask Glean "what is pilot 20018's
    bill projection config?" and get the answer.
 
 ## Zero-dependency rule
@@ -32,20 +34,43 @@ dependencies without explicit team review.
 ## Setup
 
 1. Create GitHub Actions secrets:
+   - `BIDGELY_API_TOKEN_UAT` — stable bearer token for `uat`
    - `BIDGELY_BASIC_AUTH_NONPRODQA` — prebuilt Base64 payload for
      `Authorization: Basic <secret>` when minting the `nonprodqa` access token
+   - `BIDGELY_BASIC_AUTH_PROD_EU` — Basic auth payload for prod EU token minting
+   - `BIDGELY_BASIC_AUTH_PROD_NA` — Basic auth payload for prod NA token minting
+   - `BIDGELY_BASIC_AUTH_PROD_NA2` — Basic auth payload for prod NA2 token minting
 2. Create GitHub Actions variables:
+   - `PILOT_CONFIGS_UAT` — JSON mapping of pilot ID to API base URL for `uat`
    - `PILOT_CONFIGS_NONPRODQA` — JSON mapping of pilot ID to API base URL
+   - `PILOT_CONFIGS_PROD_EU` — e.g. `{"20018":"https://api.eu.bidgely.com"}`
+   - `PILOT_CONFIGS_PROD_NA` — e.g. `{"10136":"https://naapi.bidgely.com"}`
+   - `PILOT_CONFIGS_PROD_NA2` — e.g.
+     `{"10129":"http://naapi2-external.bidgely.com","10128":"http://naapi2-external.bidgely.com"}`
    - `BIDGELY_TOKEN_URL_NONPRODQA` — token endpoint URL
+   - `BIDGELY_TOKEN_URL_PROD_EU`, `BIDGELY_TOKEN_URL_PROD_NA`,
+     `BIDGELY_TOKEN_URL_PROD_NA2`
    - `BIDGELY_TOKEN_MODE_NONPRODQA=client_credentials`
+   - `BIDGELY_TOKEN_MODE_PROD_EU=client_credentials`
+   - `BIDGELY_TOKEN_MODE_PROD_NA=client_credentials`
+   - `BIDGELY_TOKEN_MODE_PROD_NA2=client_credentials`
    - `BIDGELY_TOKEN_SCOPE_NONPRODQA=all`
+   - `BIDGELY_TOKEN_SCOPE_PROD_EU=all`
+   - `BIDGELY_TOKEN_SCOPE_PROD_NA=all`
+   - `BIDGELY_TOKEN_SCOPE_PROD_NA2=all`
    - `LEVELS_OF_INTEREST` — JSON array of entity levels to fetch
    - Optional token-minting knobs:
      `BIDGELY_ACCESS_TOKEN_FIELD_NONPRODQA`,
-     `BIDGELY_TOKEN_EXTRA_BODY_NONPRODQA`
+     `BIDGELY_TOKEN_EXTRA_BODY_NONPRODQA`,
+     `BIDGELY_ACCESS_TOKEN_FIELD_PROD_EU`,
+     `BIDGELY_ACCESS_TOKEN_FIELD_PROD_NA`,
+     `BIDGELY_ACCESS_TOKEN_FIELD_PROD_NA2`,
+     `BIDGELY_TOKEN_EXTRA_BODY_PROD_EU`,
+     `BIDGELY_TOKEN_EXTRA_BODY_PROD_NA`,
+     `BIDGELY_TOKEN_EXTRA_BODY_PROD_NA2`
 3. Run the workflow manually first (Actions > Pilot Config Sync > Run workflow).
-4. Eyeball the `nonprodqa` output. `uat` and `prod` should log as placeholders until
-   their auth details are added.
+4. Eyeball the `uat`, `nonprodqa`, and all three `prod` region outputs. The final
+   repo tree should contain `pilots/uat/`, `pilots/nonprodqa/`, and `pilots/prod/`.
 
 ## Running tests
 

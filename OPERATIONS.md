@@ -1,18 +1,23 @@
 # Operations Runbook
 
-## Rotate the token-mint credential
+## Rotate environment credentials
 
-Phase 2.5 currently activates `nonprodqa` only. The workflow mints a fresh
-short-lived access token during each run using `client_credentials`, so you rotate
-the Basic auth secret rather than editing a raw bearer token.
+Phase 2.5 now runs all environments with a mixed auth model:
+- `uat` uses a stable bearer token
+- `nonprodqa` uses one `client_credentials` Basic auth secret
+- `prod` uses three region-specific `client_credentials` Basic auth secrets
 
-1. Get the new `nonprodqa` client-credentials secret from whoever manages Bidgely API access.
+1. Get the new environment credential from whoever manages Bidgely API access.
 2. Go to repo Settings > Secrets and variables > Actions > Secrets.
-3. Update `BIDGELY_BASIC_AUTH_NONPRODQA` with the Base64 payload used in
-   `Authorization: Basic <secret>`.
-4. If the token endpoint contract changed, also update `BIDGELY_TOKEN_URL_NONPRODQA`,
-   `BIDGELY_TOKEN_MODE_NONPRODQA`, `BIDGELY_TOKEN_SCOPE_NONPRODQA`, and any optional
-   response/body overrides.
+3. Update the appropriate secret:
+   - `BIDGELY_API_TOKEN_UAT`
+   - `BIDGELY_BASIC_AUTH_NONPRODQA`
+   - `BIDGELY_BASIC_AUTH_PROD_EU`
+   - `BIDGELY_BASIC_AUTH_PROD_NA`
+   - `BIDGELY_BASIC_AUTH_PROD_NA2`
+4. If a token endpoint contract changed, also update the matching `BIDGELY_TOKEN_URL_*`,
+   `BIDGELY_TOKEN_MODE_*`, `BIDGELY_TOKEN_SCOPE_*`, and any optional response/body
+   overrides for that environment or prod region.
 5. Run the workflow manually (Actions > Pilot Config Sync > Run workflow) to verify.
 
 If the token has already expired, the workflow will have been failing with exit code 2
@@ -21,7 +26,7 @@ and the message "ALL pilots failed with auth errors." Fix the secret and re-run.
 ## Add a new pilot
 
 1. Go to repo Settings > Secrets and variables > Actions > Variables.
-2. Edit `PILOT_CONFIGS_NONPRODQA` to add the new pilot ID
+2. Edit the appropriate `PILOT_CONFIGS_*` variable to add the new pilot ID
    and its API base URL.
    e.g. add `"20020":"https://api-server-foo.bidgely.com"` to the JSON object.
 3. Run the workflow manually to verify.
@@ -80,8 +85,9 @@ for this pilot" and is skipped silently. Successes are written to
 To add or remove a level: edit `LEVELS_OF_INTEREST` in repo Settings > Variables
 and re-run the workflow. Empty/unset = root only (legacy behavior).
 
-Phase 2.5 introduces env-scoped storage and activates `nonprodqa` first. `uat` and
-`prod` keep placeholder workflow steps until their auth details are known.
+Phase 2.5 uses env-scoped storage for all environments. `prod` is split into three
+region-specific workflow steps that all write into the shared `prod` tree using
+disjoint pilot subsets.
 
 Example value (committed v1 set, 39 entries):
 
@@ -110,11 +116,18 @@ For Phase 2 (single-level MVP), start with one entry like
 
 | Variable | Type | Description |
 |----------|------|-------------|
+| `BIDGELY_API_TOKEN_UAT` | Secret | Stable bearer token for `uat` |
 | `BIDGELY_BASIC_AUTH_NONPRODQA` | Secret | Base64 payload for `Authorization: Basic <secret>` when minting the `nonprodqa` access token |
+| `BIDGELY_BASIC_AUTH_PROD_EU` / `..._PROD_NA` / `..._PROD_NA2` | Secret | Region-specific Base64 Basic auth payloads for prod token minting |
+| `PILOT_CONFIGS_UAT` | Variable | JSON mapping of pilot ID → API base URL for `uat` |
 | `PILOT_CONFIGS_NONPRODQA` | Variable | JSON mapping of pilot ID → API base URL for `nonprodqa` |
+| `PILOT_CONFIGS_PROD_EU` / `..._PROD_NA` / `..._PROD_NA2` | Variable | Region-specific prod pilot maps |
 | `BIDGELY_TOKEN_URL_NONPRODQA` | Variable | Token endpoint URL for `nonprodqa` |
+| `BIDGELY_TOKEN_URL_PROD_EU` / `..._PROD_NA` / `..._PROD_NA2` | Variable | Region-specific prod token endpoints |
 | `BIDGELY_TOKEN_MODE_NONPRODQA` | Variable | Token mint mode for `nonprodqa`. Set to `client_credentials`. |
+| `BIDGELY_TOKEN_MODE_PROD_EU` / `..._PROD_NA` / `..._PROD_NA2` | Variable | Token mint modes for prod regions. Set to `client_credentials`. |
 | `BIDGELY_TOKEN_SCOPE_NONPRODQA` | Variable | Optional token scope for `nonprodqa`. Set to `all` for the current endpoint. |
+| `BIDGELY_TOKEN_SCOPE_PROD_EU` / `..._PROD_NA` / `..._PROD_NA2` | Variable | Optional token scopes for prod regions. Set to `all` for the current endpoints. |
 | `LEVELS_OF_INTEREST` | Variable | (Optional) JSON array of entity-ID suffixes to fetch per pilot in addition to pilot-root. See "Entity-level overrides" above. Default `[]` (root only). |
-| `BIDGELY_ACCESS_TOKEN_FIELD_NONPRODQA` | Variable | (Optional) Dot-path to the access token in the response JSON. Default `access_token`. |
-| `BIDGELY_TOKEN_EXTRA_BODY_NONPRODQA` | Variable | (Optional) Extra JSON object merged into the `nonprodqa` token request body. |
+| `BIDGELY_ACCESS_TOKEN_FIELD_NONPRODQA` / `..._PROD_EU` / `..._PROD_NA` / `..._PROD_NA2` | Variable | (Optional) Dot-path to the access token in the response JSON. Default `access_token`. |
+| `BIDGELY_TOKEN_EXTRA_BODY_NONPRODQA` / `..._PROD_EU` / `..._PROD_NA` / `..._PROD_NA2` | Variable | (Optional) Extra JSON object merged into the minted-token request body. |

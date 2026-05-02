@@ -31,6 +31,23 @@ jobs:
           git config user.name "pilot-state-sync[bot]"
           git config user.email "pilot-state-sync[bot]@users.noreply.github.com"
 
+      - name: Sync uat
+        env:
+          BIDGELY_API_TOKEN: ${{ secrets.BIDGELY_API_TOKEN_UAT }}
+          PILOT_CONFIGS: ${{ vars.PILOT_CONFIGS_UAT }}
+          BIDGELY_ENV: uat
+        run: |
+          if [ -z "$PILOT_CONFIGS" ]; then
+            echo "[sync] Skipping uat: configure PILOT_CONFIGS_UAT to enable this environment."
+            exit 0
+          fi
+          if [ -z "$BIDGELY_API_TOKEN" ]; then
+            echo "[sync] Missing static API token configuration for uat."
+            exit 1
+          fi
+          echo "::add-mask::$BIDGELY_API_TOKEN"
+          node scripts/sync.js
+
       - name: Sync nonprodqa
         env:
           BIDGELY_TOKEN_URL: ${{ vars.BIDGELY_TOKEN_URL_NONPRODQA }}
@@ -54,13 +71,74 @@ jobs:
           echo "::add-mask::$TOKEN"
           BIDGELY_API_TOKEN="$TOKEN" node scripts/sync.js
 
-      - name: Uat placeholder
+      - name: Sync prod eu
+        env:
+          BIDGELY_TOKEN_URL: ${{ vars.BIDGELY_TOKEN_URL_PROD_EU }}
+          BIDGELY_TOKEN_MODE: ${{ vars.BIDGELY_TOKEN_MODE_PROD_EU }}
+          BIDGELY_BASIC_AUTH: ${{ secrets.BIDGELY_BASIC_AUTH_PROD_EU }}
+          BIDGELY_TOKEN_SCOPE: ${{ vars.BIDGELY_TOKEN_SCOPE_PROD_EU }}
+          BIDGELY_ACCESS_TOKEN_FIELD: ${{ vars.BIDGELY_ACCESS_TOKEN_FIELD_PROD_EU }}
+          BIDGELY_TOKEN_EXTRA_BODY: ${{ vars.BIDGELY_TOKEN_EXTRA_BODY_PROD_EU }}
+          PILOT_CONFIGS: ${{ vars.PILOT_CONFIGS_PROD_EU }}
+          BIDGELY_ENV: prod
         run: |
-          echo "[sync] Skipping uat: Phase 2.5 currently activates nonprodqa only."
+          if [ -z "$PILOT_CONFIGS" ]; then
+            echo "[sync] Skipping prod eu: configure PILOT_CONFIGS_PROD_EU to enable this region."
+            exit 0
+          fi
+          if [ -z "$BIDGELY_TOKEN_URL" ] || [ -z "$BIDGELY_BASIC_AUTH" ]; then
+            echo "[sync] Missing token mint configuration for prod eu."
+            exit 1
+          fi
+          TOKEN="$(node scripts/mint-token.js)"
+          echo "::add-mask::$TOKEN"
+          BIDGELY_API_TOKEN="$TOKEN" node scripts/sync.js
 
-      - name: Prod placeholder
+      - name: Sync prod na
+        env:
+          BIDGELY_TOKEN_URL: ${{ vars.BIDGELY_TOKEN_URL_PROD_NA }}
+          BIDGELY_TOKEN_MODE: ${{ vars.BIDGELY_TOKEN_MODE_PROD_NA }}
+          BIDGELY_BASIC_AUTH: ${{ secrets.BIDGELY_BASIC_AUTH_PROD_NA }}
+          BIDGELY_TOKEN_SCOPE: ${{ vars.BIDGELY_TOKEN_SCOPE_PROD_NA }}
+          BIDGELY_ACCESS_TOKEN_FIELD: ${{ vars.BIDGELY_ACCESS_TOKEN_FIELD_PROD_NA }}
+          BIDGELY_TOKEN_EXTRA_BODY: ${{ vars.BIDGELY_TOKEN_EXTRA_BODY_PROD_NA }}
+          PILOT_CONFIGS: ${{ vars.PILOT_CONFIGS_PROD_NA }}
+          BIDGELY_ENV: prod
         run: |
-          echo "[sync] Skipping prod: Phase 2.5 currently activates nonprodqa only."
+          if [ -z "$PILOT_CONFIGS" ]; then
+            echo "[sync] Skipping prod na: configure PILOT_CONFIGS_PROD_NA to enable this region."
+            exit 0
+          fi
+          if [ -z "$BIDGELY_TOKEN_URL" ] || [ -z "$BIDGELY_BASIC_AUTH" ]; then
+            echo "[sync] Missing token mint configuration for prod na."
+            exit 1
+          fi
+          TOKEN="$(node scripts/mint-token.js)"
+          echo "::add-mask::$TOKEN"
+          BIDGELY_API_TOKEN="$TOKEN" node scripts/sync.js
+
+      - name: Sync prod na2
+        env:
+          BIDGELY_TOKEN_URL: ${{ vars.BIDGELY_TOKEN_URL_PROD_NA2 }}
+          BIDGELY_TOKEN_MODE: ${{ vars.BIDGELY_TOKEN_MODE_PROD_NA2 }}
+          BIDGELY_BASIC_AUTH: ${{ secrets.BIDGELY_BASIC_AUTH_PROD_NA2 }}
+          BIDGELY_TOKEN_SCOPE: ${{ vars.BIDGELY_TOKEN_SCOPE_PROD_NA2 }}
+          BIDGELY_ACCESS_TOKEN_FIELD: ${{ vars.BIDGELY_ACCESS_TOKEN_FIELD_PROD_NA2 }}
+          BIDGELY_TOKEN_EXTRA_BODY: ${{ vars.BIDGELY_TOKEN_EXTRA_BODY_PROD_NA2 }}
+          PILOT_CONFIGS: ${{ vars.PILOT_CONFIGS_PROD_NA2 }}
+          BIDGELY_ENV: prod
+        run: |
+          if [ -z "$PILOT_CONFIGS" ]; then
+            echo "[sync] Skipping prod na2: configure PILOT_CONFIGS_PROD_NA2 to enable this region."
+            exit 0
+          fi
+          if [ -z "$BIDGELY_TOKEN_URL" ] || [ -z "$BIDGELY_BASIC_AUTH" ]; then
+            echo "[sync] Missing token mint configuration for prod na2."
+            exit 1
+          fi
+          TOKEN="$(node scripts/mint-token.js)"
+          echo "::add-mask::$TOKEN"
+          BIDGELY_API_TOKEN="$TOKEN" node scripts/sync.js
 
       - name: Upload _meta as artifact
         if: always()
