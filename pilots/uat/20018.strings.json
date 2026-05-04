@@ -1383,7 +1383,7 @@
     "PREFERENCE.TAB.ALERT_TYPE": "Upozornenia",
     "PREFERENCE.TAB.ALERT_TYPE.OPTIONS.AO_SAVINGS.DESCRIPTION": "Súhrn predchádzajúceho obdobia. Posiela sa raz mesačne.",
     "PREFERENCE.TAB.ALERT_TYPE.OPTIONS.AO_SAVINGS.HEADING": "Úspory v kategórii vždy zapnuté spotrebiče",
-    "PREFERENCE.TAB.ALERT_TYPE.OPTIONS.BILL_PROJECTION.DESCRIPTION": "Upozornenie posielané raz mesačne, v strede fakturačného cyklu. Obsahuje vašu skutočnú spotrebu a odhadovanú sumu faktúry.",
+    "PREFERENCE.TAB.ALERT_TYPE.OPTIONS.BILL_PROJECTION.DESCRIPTION": "Upozornenie posielané raz mesačne v strede fakturačného cyklu. Obsahuje vašu skutočnú spotrebu a odhadovanú sumu faktúry.",
     "PREFERENCE.TAB.ALERT_TYPE.OPTIONS.BILL_PROJECTION.HEADING": "Upozornenie o priebežnej spotrebe",
     "PREFERENCE.TAB.ALERT_TYPE.OPTIONS.BUDGET_ALERT.DESCRIPTION": "Upozornenie sa posiela, keď sa priblížite k 75 % a 100 % vášho personalizovaného mesačného rozpočtu na elektrinu alebo ho dosiahnete.",
     "PREFERENCE.TAB.ALERT_TYPE.OPTIONS.BUDGET_ALERT.HEADING": "Upozornenie na prekročenie rozpočtu",
