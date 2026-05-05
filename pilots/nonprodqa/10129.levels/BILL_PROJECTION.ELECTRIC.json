@@ -153,7 +153,7 @@
   "event_subscriptions.MONTHLY_SUMMARY.ELECTRIC.Email": "{\"kvs\":[{\"key\":\"look_ahead_configs\",\"val\":\"{\\\"granularity\\\":\\\"DAY\\\",\\\"lookAhead\\\":2}\",\"configSource\":\"GLOBAL\",\"version\":6,\"lastUpdatedTimestamp\":1608565284}]}",
   "event_subscriptions.MONTHLY_SUMMARY.ELECTRIC.OPT_IN": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"PILOT\",\"version\":9,\"lastUpdatedTimestamp\":1773134860}]}",
   "event_subscriptions.MONTHLY_SUMMARY.ELECTRIC.OPT_OUT": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"PILOT\",\"version\":9,\"lastUpdatedTimestamp\":1773134859}]}",
-  "event_subscriptions.MONTHLY_SUMMARY.Email": "{\"kvs\":[{\"key\":\"look_ahead_configs\",\"val\":\"{\\\"granularity\\\":\\\"DAY\\\",\\\"lookAhead\\\":1}\",\"configSource\":\"PILOT\",\"version\":66,\"lastUpdatedTimestamp\":1777852186}]}",
+  "event_subscriptions.MONTHLY_SUMMARY.Email": "{\"kvs\":[{\"key\":\"look_ahead_configs\",\"val\":\"{\\\"granularity\\\":\\\"DAY\\\",\\\"lookAhead\\\":1}\",\"configSource\":\"PILOT\",\"version\":67,\"lastUpdatedTimestamp\":1777938954}]}",
   "event_subscriptions.MONTHLY_SUMMARY.GAS": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"PILOT\",\"version\":9,\"lastUpdatedTimestamp\":1773134859}]}",
   "event_subscriptions.MONTHLY_SUMMARY.GAS.DEFAULT": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"PILOT\",\"version\":9,\"lastUpdatedTimestamp\":1773134860}]}",
   "event_subscriptions.MONTHLY_SUMMARY.GAS.Email": "{\"kvs\":[{\"key\":\"look_ahead_configs\",\"val\":\"{\\\"granularity\\\":\\\"DAY\\\",\\\"lookAhead\\\":2}\",\"configSource\":\"GLOBAL\",\"version\":6,\"lastUpdatedTimestamp\":1608565284}]}",
