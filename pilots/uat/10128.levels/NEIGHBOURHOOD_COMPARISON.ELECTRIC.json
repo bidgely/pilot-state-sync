@@ -223,7 +223,7 @@
   "event_subscriptions.USAGE_ALERT.GAS.OPT_IN": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\",\"version\":2,\"lastUpdatedTimestamp\":1768998974}]}",
   "event_subscriptions.USAGE_ALERT.GAS.OPT_OUT": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[\\\"Email\\\"]\",\"configSource\":\"GLOBAL\",\"version\":2,\"lastUpdatedTimestamp\":1768998974}]}",
   "event_subscriptions.USER_WELCOME": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"PILOT\",\"version\":8,\"lastUpdatedTimestamp\":1768901008}]}",
-  "event_subscriptions.USER_WELCOME.Email": "{\"kvs\":[{\"key\":\"utility_notifications_sanity\",\"val\":\"{\\\"sanityEnabled\\\": true,\\\"delay\\\":1}\",\"configSource\":\"PILOT\",\"version\":2,\"lastUpdatedTimestamp\":1777352548},{\"key\":\"look_ahead_configs\",\"val\":\"{\\\"granularity\\\":\\\"DAY\\\",\\\"lookAhead\\\":1}\",\"configSource\":\"PILOT\",\"version\":1,\"lastUpdatedTimestamp\":1777352548}]}",
+  "event_subscriptions.USER_WELCOME.Email": "{\"kvs\":[]}",
   "event_subscriptions.WEEKLY_TRACKER.ELECTRIC": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\",\"version\":2,\"lastUpdatedTimestamp\":1768998974}]}",
   "event_subscriptions.WEEKLY_TRACKER.ELECTRIC.DEFAULT": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\",\"version\":2,\"lastUpdatedTimestamp\":1768998974}]}",
   "event_subscriptions.WEEKLY_TRACKER.ELECTRIC.Email": "{\"kvs\":[{\"key\":\"look_ahead_configs\",\"val\":\"{\\\"granularity\\\":\\\"DAY\\\",\\\"lookAhead\\\":1}\",\"configSource\":\"GLOBAL\",\"version\":2,\"lastUpdatedTimestamp\":1768998974}]}",
