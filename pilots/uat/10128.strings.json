@@ -211,7 +211,7 @@
     "DASHBOARD.ACTIVITY_MAP.DATA_NOT_AVAILABLE": "ActivityMap data not available for this period",
     "DASHBOARD.ADA_BTN_TEXT": "View chart in table",
     "DASHBOARD.APPLIANCES.TOTAL_LABEL": "All Appliances",
-    "DASHBOARD.BILL_CHARGES_DISCLAIMER": "Energy charges don't include taxes, fixed charges, rebates, or credits, and therefore may be different than your total bill amount.",
+    "DASHBOARD.BILL_CHARGES_DISCLAIMER": "Total Bill include taxes, fixed charges, rebates and credits.",
     "DASHBOARD.COMMON.MIN": "",
     "DASHBOARD.COMMON.NO": "NO",
     "DASHBOARD.COMMON.YES": "YES",
