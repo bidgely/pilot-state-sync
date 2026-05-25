@@ -6991,7 +6991,7 @@
     "com.bidgely.cloud.email.shc.barGraph.great": "GREAT",
     "com.bidgely.cloud.email.shc.barGraph.subtitle.text": "Comparison is based on <span style=\"font-weight:700;\">estimated total energy usage</span>",
     "com.bidgely.cloud.email.shc.barGraph.you": "You",
-    "com.bidgely.cloud.email.shc.efficient.home.definition.text": "Efficient homes are the top 30% in this group that use the least energy. Energy charges don’t include taxes, fixed charges, rebates, or credits, and therefore may be different than your total bill amount.",
+    "com.bidgely.cloud.email.shc.efficient.home.definition.text": "Efficient homes are the top 30% in this group that use the least energy. Total Bill include taxes, fixed charges, rebates and credits.",
     "com.bidgely.cloud.email.shc.efficient.home.dfCombinedDefinition.text": "",
     "com.bidgely.cloud.email.shc.efficient.home.solarDefinition.text": "You are compared to homes with Solar. Comparison is based on estimated total usage.<br/>Your estimated total usage is sum of estimated solar generation and net meter data.",
     "com.bidgely.cloud.email.shc.energyChargesText.df.email": "Energy charges mentioned exclude taxes, fixed charges, rebates, or credits and may differ from your total bill amount.",
