@@ -1775,6 +1775,7 @@
     "SPENT_ON_APPLIANCE.RECO_BANNER.TITLE": "Here's a savings tip!",
     "SPENT_ON_APPLIANCE.TITLE": "How much you spent on {primaryAppliance} last year",
     "SPONSORED_RECO.TITLE": "Energy Co Programs",
+    "SSO_AUTH_ACCESS_PAGE_ERROR_MSG": "Niečo sa pokazilo. Skúste sa znova prihlásiť, aby ste získali prístup k tejto stránke.",
     "SSO_AUTH_ERROR_MSG_000": "Invalid Request",
     "SSO_AUTH_ERROR_MSG_001": "Invalid Token",
     "SSO_AUTH_ERROR_MSG_002": "Token Expired",
