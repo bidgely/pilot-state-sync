@@ -1780,7 +1780,7 @@
     "SSO_AUTH_ERROR_MSG_002": "Token Expired",
     "SSO_AUTH_ERROR_MSG_003": "Invalid Web Request",
     "SSO_AUTH_ERROR_MSG_010": "Internal Error",
-    "SSO_AUTH_ERROR_MSG_011": "Unknown User",
+    "SSO_AUTH_ERROR_MSG_011": "Something went wrong. Please try logging in again to access this page. please use url : https://www.google.com>",
     "SSO_AUTH_ERROR_MSG_012": "Multiple User Found",
     "SUPPORT.EMAIL.SUBJECT": "Help for UTILITYCO",
     "SURVEY.CHECK_ALL": "Check all that apply",
