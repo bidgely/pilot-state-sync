@@ -1463,7 +1463,7 @@
     "PREFERENCE.TAB.CONTACT_INFO.EDIT_NOTE.P3": "primárnu e-mailovú adresu.",
     "PREFERENCE.TAB.CONTACT_INFO.SAVE_SUCCESS": "Kontaktné informácie boli <strong>úspešne</strong> uložené!",
     "PREFERENCE.TAB.SETTINGS": "Ďalšie",
-    "PREFERENCE.TABS.ALERT_TYPE.AGREEMENT": "Zaškrtnutím ktoréhokoľvek typu upozornenia vyššie a kliknutím na Uložiť zmeny sa zapojíte do programu a potvrdzujete, že ste si prečítali a súhlasíte s dokumentom Ochrana osobných údajov dostupným <a href={linkUrl} class={className} target=_blank>tu</a>.",
+    "PREFERENCE.TABS.ALERT_TYPE.AGREEMENT": "Zaškrtnutím ktoréhokoľvek typu upozornenia vyššie a kliknutím na Uložiť zmeny sa zapojíte do programu a potvrdzujete, že ste si prečítali a súhlasíte s dokumentom Informácie o spracúvaní osobných údajov dostupným <a href={linkUrl} class={className} target=_blank>tu</a>.",
     "PREFERENCE.TEXT": "SMS",
     "PREFERENCE.VALIDATE_EMAIL_LABEL": "E-mailová adresa",
     "PREFERENCE.VALIDATE_PRIMARY_EMAIL_PLACEHOLDER": "Sem zadajte svoju e-mailovú adresu",
