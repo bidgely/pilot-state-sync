@@ -2048,7 +2048,7 @@
     "com.bidgely.cloud.core.api.domain.measurementType.electric": "Electricity",
     "com.bidgely.cloud.core.api.domain.measurementType.gas": "Gas",
     "com.bidgely.cloud.core.api.domain.measurementType.water": "Water",
-    "com.bidgely.cloud.core.api.itemization.0": "Appliance breakdown not available for this billing cycle.",
+    "com.bidgely.cloud.core.api.itemization.0": "Rozpis spotrebičov nie je pre toto fakturačné obdobie k dispozícii.",
     "com.bidgely.cloud.core.api.itemization.3a": "Vyplňte profil vašej domácnosti a získajte tak presnejšie údaje o vašej spotrebe.",
     "com.bidgely.cloud.core.api.notifications.push.ACT.text": "Your usage of ${usage} W exceeded the threshold",
     "com.bidgely.cloud.core.api.notifications.push.ACT.text1": "Your current usage is high.",
