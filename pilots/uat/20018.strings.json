@@ -1812,7 +1812,7 @@
     "SURVEY.V2.ANSWER_LATER": "Odpovedať neskôr",
     "SURVEY.V2.COMPLETE.BTN": "Rozumiem",
     "SURVEY.V2.COMPLETE.STATUS_TEXT": "Máte hotovo!",
-    "SURVEY.V2.COMPLETE.TEXT": "Na základe vašich odpovedí prepočítavame vaše údaje. Sekciu <a class=\"link\" href=\"/dashboard/insights/usage?fuel-type={fuelType}\">Detail spotreby energie</a> si môžete pozrieť o niekoľko minút.",
+    "SURVEY.V2.COMPLETE.TEXT": "Na základe vašich odpovedí prepočítavame vaše údaje. Sekciu <a class=\"link\" href=\"/dashboard/insights/usage?fuel-type=electric\">Detail spotreby energie</a> si môžete pozrieť o niekoľko minút.",
     "SURVEY.V2.COMPLETE.UPDATE_LINK_CLICK_HERE": "kliknite sem",
     "SURVEY.V2.COMPLETE.UPDATE_LINK_MESSAGE": " a prejdite na otázku, ktorú chcete zodpovedať znova. Profil domácnosti môžete kedykoľvek aktualizovať, keď sa u vás niečo zmení. V prípade potreby vám to pripomenieme.",
     "SURVEY.V2.COMPLETE.UPDATE_LINK_TXT": "Ak si chcete pozrieť alebo upraviť svoje odpovede, ",
