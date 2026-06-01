@@ -1644,7 +1644,7 @@
     "MONTHLY_SUMMARY.V3.TOU_USAGE_BAR_ADA_LABEL": "{appliance}, {mode} {value}, image, bar series {currentIndex} of {total} ",
     "MONTHLY_SUMMARY.V3.USAGE": "Usage",
     "MONTHLY_SUMMARY.V3.USAGE_BREAKDOWN_TITLE_WITH_VALUE": "Usage Breakdown of {value}",
-    "MONTHLY_SUMMARY.V3.USAGE_CHANGE_VS_PREV_MONTH": "{percent} vs previous month",
+    "MONTHLY_SUMMARY.V3.USAGE_CHANGE_VS_PREV_MONTH": "",
     "MONTHLY_SUMMARY.V3.USAGE_CHANGE_VS_PREV_MONTH\"": "",
     "MONTHLY_SUMMARY.V3.USAGE_DOWN_VS_PREV_MONTH": "{percent} lower vs previous month",
     "MONTHLY_SUMMARY.V3.USAGE_UP_VS_PREV_MONTH": "{percent} higher vs previous month",
