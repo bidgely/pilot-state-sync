@@ -4755,6 +4755,7 @@
     "com.bidgely.cloud.high.bill.alert.icon": "https://d12of87xj1f8rc.cloudfront.net/email-images/hba.png",
     "com.bidgely.cloud.high.bill.alert.subject": "High bill alert!",
     "com.bidgely.cloud.high.bill.alert.teaser": "High bill alert!",
+    "com.bidgely.cloud.highBillAlert.sms.content": "High Bill Alert! The projected bill is ${amount}. See more: energyco.bidgely.com/${shortCode}",
     "com.bidgely.cloud.nbiInsight.i_000001.description": "Inefficient heating compared to peers for 1 billing cycle",
     "com.bidgely.cloud.nbiInsight.i_000001.message": "Your heating usage last month was {Value}{UoM} inefficient compared to peers.",
     "com.bidgely.cloud.nbiInsight.i_000001.title": "Inefficient heating",
