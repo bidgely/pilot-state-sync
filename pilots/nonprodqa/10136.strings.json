@@ -3057,7 +3057,7 @@
     "com.bidgely.cloud.core.lib.email.shc.dwelling.singlefamily": "Single family",
     "com.bidgely.cloud.core.lib.email.shc.dwelling.terraced": "Terraced",
     "com.bidgely.cloud.core.lib.email.shc.heatingtype.electric": "ELECTRIC",
-    "com.bidgely.cloud.core.lib.email.shc.heatingtype.gas": "GAS",
+    "com.bidgely.cloud.core.lib.email.shc.heatingtype.gas": "Gas",
     "com.bidgely.cloud.core.lib.email.shc.missing": "Unknown",
     "com.bidgely.cloud.core.lib.externalapi.homeHeatingType": "Heating type",
     "com.bidgely.cloud.core.lib.externalapi.homeSize": "Home size (sq. ft.)",
