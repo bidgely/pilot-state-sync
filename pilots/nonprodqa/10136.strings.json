@@ -3391,6 +3391,7 @@
     "com.bidgely.cloud.email.chooseAlertPreferences.rmp": "Choose the types of email reports you’d like to receive.",
     "com.bidgely.cloud.email.comed.footer.unsubscribe": "Unsubscribe from Bidgely Emails",
     "com.bidgely.cloud.email.content.feedback.no": "No",
+    "com.bidgely.cloud.email.content.feedback.title": "<span style=\"font-size:17px;\">Did you find this email helpful?</span>",
     "com.bidgely.cloud.email.content.feedback.title.v3": "<span style=\"font-size:17px;\">Did you find this email helpful?</span>",
     "com.bidgely.cloud.email.content.feedback.yes": "Yes",
     "com.bidgely.cloud.email.content.lifecycle.feedback.expert.active": "We’re always trying to improve the app experience to better serve your needs. What feature(s) have been most useful to you? What needs some improvement? Would you be able to tell us just a few things?",
