@@ -4500,6 +4500,7 @@
     "com.bidgely.cloud.email.text.footer.faq.nbi.url.bch": "https://bchydrotpspilot.bidgely.com/FAQ.aspx",
     "com.bidgely.cloud.email.text.footer.faq.nbi.url.nsp": "https://nsp-nonprodqa.bidgely.com/dashboard/faqs",
     "com.bidgely.cloud.email.text.footer.faq.nbi.url.scg": "https://scgnonprodqa.bidgely.com/dashboard/faqs",
+    "com.bidgely.cloud.email.text.footer.faq.nc.url.NMG": "https://nmg-nonprodqa.bidgely.com/dashboard/faqs",
     "com.bidgely.cloud.email.text.footer.faq.nc.url.ho": "https://hydroottawa.com/save-energy/residential/home-energy-reports/faq",
     "com.bidgely.cloud.email.text.footer.faq.shc.url": "https://www.bidgely.com/dashboard/faqs",
     "com.bidgely.cloud.email.text.footer.faq.summer.url": "https://vsedev.bidgely.com/disagg101",
