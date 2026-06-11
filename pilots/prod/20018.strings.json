@@ -4163,6 +4163,7 @@
     "com.bidgely.cloud.high.bill.alert.icon": "https://d12of87xj1f8rc.cloudfront.net/email-images/hba.png",
     "com.bidgely.cloud.high.bill.alert.subject": "High bill alert!",
     "com.bidgely.cloud.high.bill.alert.teaser": "High bill alert!",
+    "com.bidgely.cloud.highBillAlert.sms.content": "High Bill Alert! The projected bill is ${amount}. See more: energyco.bidgely.com/${shortCode}",
     "com.bidgely.cloud.notifications.dateFormat.dayMonth.words.space": "DAY_MONTH_IN_WORDS_SPACE",
     "com.bidgely.cloud.notifications.email.billProjection.disclaimer1.demo": "* Dáta faktura?ného cyklu sa možu líši?.",
     "com.bidgely.cloud.notifications.email.billProjection.disclaimer1.origin": "* Any estimate of your electricity bill will be a forecast based on your previous usage and expected weather conditions. Your actual electricity bill amount may vary.",
