@@ -2113,7 +2113,7 @@
     "SHC_WIDGET.HEADER_TITLE.GAS": "",
     "SHC_WIDGET.HEADER_TITLE.SUMMER": "Your Cooling Usage In The Summer",
     "SHC_WIDGET.HEADER_TITLE.WATER": "",
-    "SHC_WIDGET.HEADER_TITLE.WINTER": "Your Heating Usage In The Winter",
+    "SHC_WIDGET.HEADER_TITLE.WINTER": "Your heating usage in the winter",
     "SHC_WIDGET.HOMES": "Homes",
     "SHC_WIDGET.OUTLINE.FAIR": "<div class=\"differ {outlineBorder}-outline\"><span>You spent<div class=\"outlined-cost  {outlineCostDigits}-digit {outlineContent}-content\"> {costUnit}{costValue} </div><div class='efficiency'><span class=\"{outlineContent}-content\"> more </span> on energy </div><div class='outlined-compare'> than average homes</div></span></div>",
     "SHC_WIDGET.OUTLINE.FAIR.CONSUMPTION": "<div class=\"differ {outlineBorder}-outline\"><span>You used<div class=\"outlined-consumption  {outlineCostDigits}-digit {outlineContent}-content\"> {costValue} {consumptionUnit} </div><div class='efficiency'><span class=\"{outlineContent}-content\"> more </span> natural gas </div><div class='outlined-compare'> than average homes</div></span></div>",
