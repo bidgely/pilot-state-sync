@@ -2194,6 +2194,7 @@
     "SURVEY.V2.PROGRESS_BAR.VALUE": "<span class='progress-data'>{pgbValue}%</span> complete",
     "SURVEY.V2.SAVE_BUTTON": "SAVE",
     "SURVEY.V2.STATUS.MESSAGE": "Data refresh may sometimes take longer. If you don't see changes immediately, please visit again after a few hours.",
+    "SURVEY.V2.SUBMIT_BUTTON": "SUBMIT",
     "SURVEY.V2.TEXT_PLACE_HOLDER": "Something that is not mentioned above...",
     "SURVEY.V2.TIP.HEADING": "Personalizing your home profile is the only way to get accurate data insights and tips",
     "SURVEY.V2.TIP.LINK": "Personalize your home profile now!",
