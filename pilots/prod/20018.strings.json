@@ -2903,7 +2903,7 @@
     "com.bidgely.cloud.email.billProjection.newService.title.text": "Your Bill Summary",
     "com.bidgely.cloud.email.billProjectionHybridSectionDuration": "%s to %s",
     "com.bidgely.cloud.email.budget.alert.button.text": "MANAGE MY USAGE ALERTS",
-    "com.bidgely.cloud.email.budget.alert.day.left.text": "%s Day Left in Billing Cycle",
+    "com.bidgely.cloud.email.budget.alert.day.left.text": "%s dní do konca zúčtovacieho obdobia",
     "com.bidgely.cloud.email.budget.alert.day.text": "Spent as of %s",
     "com.bidgely.cloud.email.budget.alert.days.left.text": "%s dní do konca zúčtovacieho obdobia",
     "com.bidgely.cloud.email.budget.alert.days.left.text.origin": "%s Days left in billing cycle",
