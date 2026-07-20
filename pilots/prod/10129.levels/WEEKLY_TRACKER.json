@@ -99,7 +99,7 @@
   "event_subscriptions.APPLIANCE_RELEASE": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\"}]}",
   "event_subscriptions.APPLIANCE_RUNNING": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\"}]}",
   "event_subscriptions.BILL_PROJECTION": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\"}]}",
-  "event_subscriptions.BILL_PROJECTION.ELECTRIC": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[\\\"Email\\\"]\",\"configSource\":\"GLOBAL\",\"version\":1,\"lastUpdatedTimestamp\":1600842448}]}",
+  "event_subscriptions.BILL_PROJECTION.ELECTRIC": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\",\"version\":1,\"lastUpdatedTimestamp\":1600842448}]}",
   "event_subscriptions.BILL_PROJECTION.ELECTRIC.DEFAULT": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\",\"version\":1,\"lastUpdatedTimestamp\":1600842445}]}",
   "event_subscriptions.BILL_PROJECTION.ELECTRIC.Email": "{\"kvs\":[{\"key\":\"look_ahead_configs\",\"val\":\"{\\\"granularity\\\":\\\"DAY\\\",\\\"lookAhead\\\":1}\",\"configSource\":\"GLOBAL\",\"version\":1,\"lastUpdatedTimestamp\":1608705891}]}",
   "event_subscriptions.BILL_PROJECTION.ELECTRIC.OPT_IN": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\",\"version\":2,\"lastUpdatedTimestamp\":1629894587}]}",
