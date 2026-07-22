@@ -1885,7 +1885,7 @@
     "PREFERENCE.TAB.CONTACT_INFO.EDIT_NOTE.P3": "primary email address in order to edit your information.",
     "PREFERENCE.TAB.CONTACT_INFO.SAVE_SUCCESS": "Contact info saved <strong>successfully!</strong>",
     "PREFERENCE.TAB.SETTINGS": "Settings",
-    "PREFERENCE.TABS.ALERT_TYPE.AGREEMENT": "By checking any Alert Type box above and clicking save changes, you enroll in the program and acknowledge that you have read and agree to the Privacy Policy <a href=\"%7blinkUrl%7d\" class=\"{className}\" target=\"_blank\" rel=\"noopener noreferrer\">here.</a>.",
+    "PREFERENCE.TABS.ALERT_TYPE.AGREEMENT": "By checking any Alert Type box above and clicking save changes, you enroll in the program and acknowledge that you have read and agree to the Privacy Policy <a href=\"%7blinkUrl%7d\" class=\"{className}\" target=\"_blank\" rel=\"noopener noreferrer\">here.</a>",
     "PREFERENCE.TEXT": "Text",
     "PREFERENCE.VALIDATE_EMAIL_LABEL": "Email Address",
     "PREFERENCE.VALIDATE_PRIMARY_EMAIL_PLACEHOLDER": "Type your email address here",
