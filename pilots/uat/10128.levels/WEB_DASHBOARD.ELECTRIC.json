@@ -146,7 +146,7 @@
   "event_subscriptions.MONTHLY_SUMMARY.ELECTRIC": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"PILOT\",\"version\":8,\"lastUpdatedTimestamp\":1768901015}]}",
   "event_subscriptions.MONTHLY_SUMMARY.ELECTRIC.DEFAULT": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"PILOT\",\"version\":8,\"lastUpdatedTimestamp\":1768901053}]}",
   "event_subscriptions.MONTHLY_SUMMARY.ELECTRIC.Email": "{\"kvs\":[{\"key\":\"look_ahead_configs\",\"val\":\"{\\\"granularity\\\":\\\"DAY\\\",\\\"lookAhead\\\":2}\",\"configSource\":\"GLOBAL\",\"version\":2,\"lastUpdatedTimestamp\":1768998968}]}",
-  "event_subscriptions.MONTHLY_SUMMARY.ELECTRIC.OPT_IN": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"PILOT\",\"version\":8,\"lastUpdatedTimestamp\":1768901048}]}",
+  "event_subscriptions.MONTHLY_SUMMARY.ELECTRIC.OPT_IN": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[\\\"Email\\\"]\",\"configSource\":\"PILOT\",\"version\":9,\"lastUpdatedTimestamp\":1784809144}]}",
   "event_subscriptions.MONTHLY_SUMMARY.ELECTRIC.OPT_OUT": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"PILOT\",\"version\":8,\"lastUpdatedTimestamp\":1768901023}]}",
   "event_subscriptions.MONTHLY_SUMMARY.Email": "{\"kvs\":[{\"key\":\"look_ahead_configs\",\"val\":\"{\\\"granularity\\\":\\\"DAY\\\",\\\"lookAhead\\\":1}\",\"configSource\":\"PILOT\",\"version\":9,\"lastUpdatedTimestamp\":1770207023}]}",
   "event_subscriptions.MONTHLY_SUMMARY.GAS": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"PILOT\",\"version\":8,\"lastUpdatedTimestamp\":1768901027}]}",
