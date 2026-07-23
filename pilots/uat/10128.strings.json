@@ -2139,6 +2139,7 @@
     "SOLAR.COST.NET_CHARGES": "Net Charges",
     "SOLAR.LEGEND_TEXT.COST.energySolar": "Net Credits",
     "SOLAR.LEGEND_TEXT.COST.estimatedSolar": "Estimated Solar",
+    "SOLAR.LEGEND_TEXT.actualSolarGeneration": "Actual Solar Generation",
     "SOLAR.LEGEND_TEXT.energySolar": "To Grid",
     "SOLAR.LEGEND_TEXT.estimatedSolar": "Estimated Solar",
     "SOLAR.LEGEND_TEXT.solarGeneration": "Solar Generation",
