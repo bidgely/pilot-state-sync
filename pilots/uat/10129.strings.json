@@ -1171,7 +1171,7 @@
     "INSIGHTS.USAGE.SOLAR.INFO.HOURS_INFO.RATE_UNIT": "$ / kWh",
     "INSIGHTS.USAGE.SOLAR.INFO.SUBTITLE": "Your energy costs more during peak hours. Try to shift your consumption to off-peak hours to save money.",
     "INSIGHTS.USAGE.SOLAR.INFO.TITLE": "You have peak pricing from PEAK_HOUR_TIME everyday.",
-    "INSIGHTS.USAGE.SOLAR_GENERATION": "Actual Solar Generation",
+    "INSIGHTS.USAGE.SOLAR_GENERATION": "Solar Energy Generation",
     "INSIGHTS.USAGE.SOLAR_TOTAL": "Total",
     "INSIGHTS.USAGE.SUB_CHART_DISCLAIMER.SOLAR.COST.CREDIT_BALANCE": "Total NEM charges (True-up expected in {trueUpDate}): <span>{creditValue}</span>",
     "INSIGHTS.USAGE.SUB_CHART_DISCLAIMER.SOLAR.DAY": "Your NET import was a total of <span>{netGridConsumption}</span> from the grid this day!",
