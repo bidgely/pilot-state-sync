@@ -142,7 +142,7 @@
   "event_subscriptions.GB_WELCOME": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\"}]}",
   "event_subscriptions.GOAL_EVENT": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\"}]}",
   "event_subscriptions.HAN_WELCOME": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\"}]}",
-  "event_subscriptions.HER": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[]\",\"configSource\":\"GLOBAL\"}]}",
+  "event_subscriptions.HER": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[\\\"Paper\\\"]\",\"configSource\":\"PILOT\",\"version\":1,\"lastUpdatedTimestamp\":1786720005}]}",
   "event_subscriptions.HER.ELECTRIC.OPT_IN": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[\\\"Paper\\\"]\",\"configSource\":\"GLOBAL\",\"version\":1,\"lastUpdatedTimestamp\":1609309660}]}",
   "event_subscriptions.HER.ELECTRIC.OPT_OUT": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[\\\"Paper\\\"]\",\"configSource\":\"GLOBAL\",\"version\":1,\"lastUpdatedTimestamp\":1609309659}]}",
   "event_subscriptions.HER.GAS": "{\"kvs\":[{\"key\":\"delivery_modes\",\"val\":\"[\\\"Paper\\\"]\",\"configSource\":\"PILOT\",\"version\":1,\"lastUpdatedTimestamp\":1785911587}]}",
