@@ -3289,7 +3289,7 @@
     "com.bidgely.cloud.email.billProjection.content": "Ameren: You have spent ${amount} for bill cycle ${billStart} to ${billEnd} at ${address} so far. See your projected cost at Ameren.com",
     "com.bidgely.cloud.email.billProjection.disclaimer.1": "",
     "com.bidgely.cloud.email.billProjection.disclaimer.2": "**Please note that the amount does not include state and local taxes and service charges associated with your account. Your actual total billed amount will be higher than the amount shown.",
-    "com.bidgely.cloud.email.billProjection.footer.disclaimer.1": "<span style=\"font-size:17px\">All dollar amounts are rounded to the nearest dollar.</span>",
+    "com.bidgely.cloud.email.billProjection.footer.disclaimer.1": "All dollar amounts are rounded to the nearest dollar and represent actual electric usage. Monthly service charges, fees, additional services taxes, etc are not included.",
     "com.bidgely.cloud.email.billProjection.footer.disclaimer.2": "",
     "com.bidgely.cloud.email.billProjection.footer.disclaimer.3": "",
     "com.bidgely.cloud.email.billProjection.newService.body.text": "You will receive new emails each month",
