@@ -6417,8 +6417,6 @@
     "com.bidgely.cloud.email.ms.vsPreviousMonthText": "vs. previous month",
     "com.bidgely.cloud.email.ms.vsSameCostDiff": "same as previous year",
     "com.bidgely.cloud.email.ms.vsSameMonthLastYear": "vs. same month last year",
-    "com.bidgely.cloud.email.ms.zero.cost.breakdown.text1": "Other charges include taxes, rebates, or credits, and therefore may be different than your total bill amount.<br />Energy credit applied — you exported more than you used.",
-    "com.bidgely.cloud.email.ms.zero.cost.negative.text": "Energy credit applied — you exported more than you used.",
     "com.bidgely.cloud.email.ms.zero.cost.text": "No electricity charges this month — your solar covered everything",
     "com.bidgely.cloud.email.mtd.breakdown.section.title.text": "Reasons for high bill so far",
     "com.bidgely.cloud.email.multiple.monthly.peak.usage.legend.text": "${ON_PEAK} (Rate Plan ${planName})",
