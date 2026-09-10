@@ -2966,7 +2966,7 @@
     "com.bidgely.cloud.connectivity.failure.version.not.found.user.action.message": "We are looking into it and will restore the connection soon.",
     "com.bidgely.cloud.connectivity.failure.virtual.key.required.alert.header": "Virtual Key Missing",
     "com.bidgely.cloud.connectivity.failure.virtual.key.required.failure.reason.message": "We could not start/stop charging due to unavailibility of third party access.",
-    "com.bidgely.cloud.connectivity.failure.virtual.key.required.user.action.message": "Please reconnect your EV using the Recoonect button below & provide us third party access on Tesla App.",
+    "com.bidgely.cloud.connectivity.failure.virtual.key.required.user.action.message": "Please reconnect your EV using the Reconnect button below & provide us third party access on Tesla App.",
     "com.bidgely.cloud.connectivity.invalid.data.alert.header": "Temporary failure",
     "com.bidgely.cloud.connectivity.invalid.data.user.action.message": "We will restore the connection soon!",
     "com.bidgely.cloud.connectivity.known.issue.alert.header": "Temporary failure",
